@@ -160,15 +160,15 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white">
       {/* Navbar */}
-      <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled ? "bg-white/90 backdrop-blur-md shadow-md" : "bg-transparent"}`}>
+      <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled ? "bg-white/95 backdrop-blur-md shadow-sm border-b border-border" : "bg-transparent"}`}>
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           <div className="flex flex-col">
-            <span className="text-lg font-extrabold text-primary tracking-tight leading-tight">Just-In-Time Consultancy</span>
+            <span className={`text-lg font-extrabold tracking-tight leading-tight transition-colors duration-300 ${scrolled ? "text-primary" : "text-white"}`}>Just-In-Time Consultancy</span>
             <span className="text-[11px] text-accent font-medium hidden md:block tracking-wide">Efficient Research & Smart Procurement Solutions</span>
           </div>
           <div className="hidden lg:flex items-center gap-8">
             {[["About", "about"], ["Services", "services"], ["Process", "process"], ["Industries", "industries"], ["Contact", "contact"]].map(([label, id]) => (
-              <a key={id} href={`#${id}`} className="text-sm font-medium text-foreground/70 hover:text-primary transition-colors duration-200">{label}</a>
+              <a key={id} href={`#${id}`} className={`text-sm font-medium transition-colors duration-200 ${scrolled ? "text-foreground/60 hover:text-primary" : "text-white/60 hover:text-white"}`}>{label}</a>
             ))}
           </div>
           <Button onClick={() => setLocation("/request")} className="bg-accent hover:bg-accent/90 text-white font-semibold shadow-lg shadow-accent/20">
@@ -178,57 +178,233 @@ export default function Home() {
       </nav>
 
       {/* Hero */}
-      <section className="min-h-screen flex items-center relative overflow-hidden bg-gradient-to-br from-primary via-primary/95 to-[#1a3a7a]">
-        <div className="absolute inset-0 opacity-10">
-          <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
-                <path d="M 60 0 L 0 0 0 60" fill="none" stroke="white" strokeWidth="0.5"/>
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#grid)"/>
-          </svg>
+      <section className="min-h-screen flex flex-col relative overflow-hidden" style={{ background: "linear-gradient(135deg, #0a1628 0%, #0d1f3c 40%, #091525 100%)" }}>
+        {/* Background layers */}
+        <div className="absolute inset-0">
+          {/* Noise texture overlay */}
+          <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E\")", backgroundRepeat: "repeat", backgroundSize: "128px" }} />
+          {/* Radial accent glow left */}
+          <div className="absolute -top-40 -left-40 w-[600px] h-[600px] rounded-full opacity-20" style={{ background: "radial-gradient(circle, hsl(161,94%,30%) 0%, transparent 70%)" }} />
+          {/* Radial deep blue glow right */}
+          <div className="absolute -bottom-60 -right-20 w-[700px] h-[700px] rounded-full opacity-15" style={{ background: "radial-gradient(circle, #1a4a9a 0%, transparent 70%)" }} />
+          {/* Subtle horizontal line grid */}
+          <div className="absolute inset-0 opacity-[0.04]" style={{ backgroundImage: "linear-gradient(0deg, transparent 24%, rgba(255,255,255,0.6) 25%, rgba(255,255,255,0.6) 26%, transparent 27%, transparent 74%, rgba(255,255,255,0.6) 75%, rgba(255,255,255,0.6) 76%, transparent 77%), linear-gradient(90deg, transparent 24%, rgba(255,255,255,0.6) 25%, rgba(255,255,255,0.6) 26%, transparent 27%, transparent 74%, rgba(255,255,255,0.6) 75%, rgba(255,255,255,0.6) 76%, transparent 77%)", backgroundSize: "80px 80px" }} />
         </div>
-        <div className="absolute top-20 right-20 w-96 h-96 bg-accent/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-20 left-10 w-64 h-64 bg-white/5 rounded-full blur-2xl" />
-        <div className="max-w-7xl mx-auto px-6 py-32 relative z-10">
-          <div className="max-w-3xl">
-            <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-              <span className="inline-block bg-accent/20 text-accent border border-accent/30 text-xs font-semibold tracking-widest uppercase px-4 py-2 rounded-full mb-6">
-                Global Procurement Consultancy
-              </span>
-            </motion.div>
-            <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }}
-              className="text-5xl md:text-7xl font-extrabold text-white leading-[1.05] tracking-tight mb-8">
-              Research.<br />
-              <span className="text-accent">Source.</span><br />
-              Procure. Deliver.
-            </motion.h1>
-            <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.25 }}
-              className="text-lg md:text-xl text-white/70 max-w-xl leading-relaxed mb-10">
-              Helping businesses source quality products smarter, faster, and more affordably — across 45+ countries and 1,200+ verified suppliers.
-            </motion.p>
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.4 }}
-              className="flex flex-col sm:flex-row gap-4">
-              <Button size="lg" onClick={() => setLocation("/request")}
-                className="bg-accent hover:bg-accent/90 text-white font-semibold text-base px-8 py-6 shadow-xl shadow-accent/30">
-                Request a Service
-              </Button>
-              <Button size="lg" variant="outline"
-                className="border-white/30 text-white hover:bg-white/10 text-base px-8 py-6 bg-white/5 backdrop-blur-sm"
-                onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}>
-                Book Consultation
-              </Button>
+
+        {/* Main hero content */}
+        <div className="flex-1 flex items-center relative z-10">
+          <div className="max-w-7xl mx-auto px-6 w-full py-28 grid lg:grid-cols-2 gap-12 items-center">
+
+            {/* Left — Text */}
+            <div>
+              <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5 }}
+                className="flex items-center gap-3 mb-8">
+                <div className="flex items-center gap-2 bg-white/5 border border-white/10 backdrop-blur-sm px-4 py-2 rounded-full">
+                  <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
+                  <span className="text-accent text-xs font-semibold tracking-[0.2em] uppercase">Global Procurement Consultancy</span>
+                </div>
+              </motion.div>
+
+              <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.1 }}
+                className="text-[clamp(3rem,5.5vw,5rem)] font-black text-white leading-[1.0] tracking-tight mb-6">
+                We Research.<br />
+                We{" "}
+                <span className="relative inline-block">
+                  <span style={{ WebkitTextStroke: "2px hsl(161,94%,30%)", color: "transparent" }}>Source.</span>
+                  <span className="absolute inset-0 text-accent" style={{ clipPath: "inset(0 60% 0 0)", transition: "clip-path 1.5s ease" }}>Source.</span>
+                </span>
+                <br />
+                We Deliver.
+              </motion.h1>
+
+              <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.3 }}
+                className="text-lg text-white/50 max-w-lg leading-relaxed mb-10">
+                Helping businesses source quality products smarter, faster, and more affordably — across{" "}
+                <span className="text-white/80 font-semibold">45+ countries</span> and{" "}
+                <span className="text-white/80 font-semibold">1,200+ verified suppliers</span>.
+              </motion.p>
+
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.45 }}
+                className="flex flex-col sm:flex-row gap-3 mb-12">
+                <button onClick={() => setLocation("/request")}
+                  className="group relative inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl font-bold text-base text-white overflow-hidden transition-all duration-300"
+                  style={{ background: "linear-gradient(135deg, hsl(161,94%,25%) 0%, hsl(161,94%,35%) 100%)", boxShadow: "0 0 40px rgba(0,166,90,0.3), 0 4px 15px rgba(0,0,0,0.3)" }}>
+                  <span className="relative z-10">Request a Service</span>
+                  <svg className="w-4 h-4 relative z-10 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                  <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+                </button>
+                <button
+                  onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
+                  className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl font-semibold text-base text-white/70 hover:text-white border border-white/10 hover:border-white/25 bg-white/5 hover:bg-white/10 transition-all duration-300">
+                  Book Consultation
+                </button>
+              </motion.div>
+
+              {/* Trust bar */}
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8, delay: 0.7 }}
+                className="flex flex-wrap items-center gap-6">
+                {[
+                  { icon: "M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z", label: "Verified Suppliers" },
+                  { icon: "M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z", label: "45+ Countries" },
+                  { icon: "M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z", label: "48hr Turnaround" },
+                ].map(({ icon, label }) => (
+                  <div key={label} className="flex items-center gap-2">
+                    <div className="w-7 h-7 rounded-lg bg-accent/15 flex items-center justify-center">
+                      <svg className="w-3.5 h-3.5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={icon}/></svg>
+                    </div>
+                    <span className="text-white/40 text-sm font-medium">{label}</span>
+                  </div>
+                ))}
+              </motion.div>
+            </div>
+
+            {/* Right — Visual: Global Network */}
+            <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8, delay: 0.2 }}
+              className="relative hidden lg:flex items-center justify-center">
+
+              {/* Central sphere */}
+              <div className="relative w-[420px] h-[420px]">
+                {/* Outer rotating ring */}
+                <motion.div animate={{ rotate: 360 }} transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+                  className="absolute inset-0 rounded-full border border-accent/15"
+                  style={{ borderStyle: "dashed" }} />
+                <motion.div animate={{ rotate: -360 }} transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                  className="absolute inset-8 rounded-full border border-white/8"
+                  style={{ borderStyle: "dashed" }} />
+
+                {/* Globe SVG */}
+                <div className="absolute inset-12 rounded-full overflow-hidden"
+                  style={{ background: "radial-gradient(ellipse at 35% 35%, #1a3a7a 0%, #0a1628 60%, #040d1a 100%)", boxShadow: "0 0 80px rgba(0,166,90,0.15), inset 0 0 60px rgba(0,0,0,0.5), 0 20px 60px rgba(0,0,0,0.5)" }}>
+                  {/* Globe lines */}
+                  <svg viewBox="0 0 280 280" className="w-full h-full opacity-25">
+                    {/* Latitude lines */}
+                    {[40, 70, 100, 130, 160, 190, 220, 250].map((y) => (
+                      <ellipse key={y} cx="140" cy={y} rx={Math.sqrt(Math.max(0, 140*140 - (y-140)*(y-140)))} ry="8" fill="none" stroke="hsl(161,94%,50%)" strokeWidth="0.7"/>
+                    ))}
+                    {/* Longitude lines */}
+                    {[0, 30, 60, 90, 120, 150].map((angle) => (
+                      <ellipse key={angle} cx="140" cy="140" rx={angle % 90 === 0 ? 100 : 50} ry="100" fill="none" stroke="hsl(161,94%,50%)" strokeWidth="0.7" transform={`rotate(${angle} 140 140)`}/>
+                    ))}
+                  </svg>
+                  {/* Gloss */}
+                  <div className="absolute top-4 left-6 w-20 h-12 rounded-full opacity-20" style={{ background: "radial-gradient(ellipse, white, transparent)" }} />
+                </div>
+
+                {/* Pulsing dots on globe */}
+                {[
+                  { top: "22%", left: "28%", delay: 0 },
+                  { top: "38%", left: "72%", delay: 0.4 },
+                  { top: "60%", left: "35%", delay: 0.8 },
+                  { top: "55%", left: "65%", delay: 1.2 },
+                  { top: "30%", left: "52%", delay: 0.6 },
+                  { top: "70%", left: "50%", delay: 1.0 },
+                ].map(({ top, left, delay }, i) => (
+                  <motion.div key={i} className="absolute z-20" style={{ top, left }}
+                    animate={{ scale: [1, 1.4, 1], opacity: [0.7, 1, 0.7] }}
+                    transition={{ duration: 2.5, repeat: Infinity, delay }}>
+                    <div className="relative w-3 h-3">
+                      <div className="w-3 h-3 rounded-full bg-accent" style={{ boxShadow: "0 0 8px hsl(161,94%,30%)" }} />
+                      <motion.div className="absolute inset-0 rounded-full border border-accent"
+                        animate={{ scale: [1, 2.5], opacity: [0.6, 0] }}
+                        transition={{ duration: 2, repeat: Infinity, delay }} />
+                    </div>
+                  </motion.div>
+                ))}
+
+                {/* Connection lines SVG overlay */}
+                <svg className="absolute inset-0 w-full h-full" viewBox="0 0 420 420" style={{ zIndex: 15 }}>
+                  <motion.path d="M 118 92 Q 210 150 302 159" fill="none" stroke="hsl(161,94%,50%)" strokeWidth="0.8" strokeDasharray="4 3"
+                    initial={{ pathLength: 0, opacity: 0 }} animate={{ pathLength: 1, opacity: [0, 0.5, 0.5, 0] }}
+                    transition={{ duration: 3, repeat: Infinity, delay: 0 }} />
+                  <motion.path d="M 302 159 Q 280 220 147 252" fill="none" stroke="hsl(161,94%,50%)" strokeWidth="0.8" strokeDasharray="4 3"
+                    initial={{ pathLength: 0, opacity: 0 }} animate={{ pathLength: 1, opacity: [0, 0.5, 0.5, 0] }}
+                    transition={{ duration: 3, repeat: Infinity, delay: 1 }} />
+                  <motion.path d="M 118 92 Q 160 200 210 273" fill="none" stroke="hsl(161,94%,50%)" strokeWidth="0.8" strokeDasharray="4 3"
+                    initial={{ pathLength: 0, opacity: 0 }} animate={{ pathLength: 1, opacity: [0, 0.5, 0.5, 0] }}
+                    transition={{ duration: 3, repeat: Infinity, delay: 2 }} />
+                </svg>
+
+                {/* Floating stat cards */}
+                <motion.div animate={{ y: [-6, 6, -6] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                  className="absolute -top-4 -right-8 z-30 flex items-center gap-3 px-4 py-3 rounded-2xl backdrop-blur-md border border-white/10"
+                  style={{ background: "rgba(10,22,40,0.85)", boxShadow: "0 8px 32px rgba(0,0,0,0.4)" }}>
+                  <div className="w-9 h-9 rounded-xl bg-accent/20 flex items-center justify-center">
+                    <svg className="w-4 h-4 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                  </div>
+                  <div>
+                    <p className="text-white text-sm font-bold leading-tight">1,200+</p>
+                    <p className="text-white/40 text-xs">Verified Suppliers</p>
+                  </div>
+                </motion.div>
+
+                <motion.div animate={{ y: [6, -6, 6] }} transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+                  className="absolute -left-10 top-1/3 z-30 flex items-center gap-3 px-4 py-3 rounded-2xl backdrop-blur-md border border-white/10"
+                  style={{ background: "rgba(10,22,40,0.85)", boxShadow: "0 8px 32px rgba(0,0,0,0.4)" }}>
+                  <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: "rgba(26,74,154,0.4)" }}>
+                    <svg className="w-4 h-4 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                  </div>
+                  <div>
+                    <p className="text-white text-sm font-bold leading-tight">45+ Nations</p>
+                    <p className="text-white/40 text-xs">Global Reach</p>
+                  </div>
+                </motion.div>
+
+                <motion.div animate={{ y: [-4, 8, -4] }} transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                  className="absolute -bottom-2 -right-6 z-30 flex items-center gap-3 px-4 py-3 rounded-2xl backdrop-blur-md border border-white/10"
+                  style={{ background: "rgba(10,22,40,0.85)", boxShadow: "0 8px 32px rgba(0,0,0,0.4)" }}>
+                  <div className="w-9 h-9 rounded-xl bg-amber-500/20 flex items-center justify-center">
+                    <svg className="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                  </div>
+                  <div>
+                    <p className="text-white text-sm font-bold leading-tight">500+</p>
+                    <p className="text-white/40 text-xs">Projects Done</p>
+                  </div>
+                </motion.div>
+
+                {/* Satisfaction pill */}
+                <motion.div animate={{ y: [5, -5, 5] }} transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
+                  className="absolute -left-8 bottom-16 z-30 flex items-center gap-2 px-3 py-2 rounded-full border border-accent/30 backdrop-blur-md"
+                  style={{ background: "rgba(0,166,90,0.12)" }}>
+                  <div className="flex gap-0.5">
+                    {[...Array(5)].map((_, i) => (
+                      <svg key={i} className="w-3 h-3 text-amber-400 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                    ))}
+                  </div>
+                  <span className="text-accent text-xs font-bold">97% Satisfaction</span>
+                </motion.div>
+              </div>
             </motion.div>
           </div>
         </div>
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
-          <motion.div animate={{ y: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 2 }}>
-            <svg className="w-6 h-6 text-white/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
-          </motion.div>
+
+        {/* Bottom marquee ticker */}
+        <div className="relative z-10 border-t border-white/5 py-4 overflow-hidden">
+          <div className="flex gap-0" style={{ animation: "marquee 30s linear infinite", whiteSpace: "nowrap" }}>
+            {[...Array(2)].map((_, repeat) => (
+              <div key={repeat} className="flex items-center gap-8 pr-8">
+                {["China", "India", "UAE", "Germany", "UK", "USA", "Ghana", "Kenya", "Singapore", "Brazil", "Japan", "South Korea", "Turkey", "Nigeria", "South Africa", "Indonesia", "Malaysia", "Netherlands", "Italy", "Canada"].map((country) => (
+                  <span key={country} className="flex items-center gap-2 text-white/25 text-sm font-medium">
+                    <span className="w-1 h-1 rounded-full bg-accent/50" />
+                    {country}
+                  </span>
+                ))}
+              </div>
+            ))}
+          </div>
         </div>
+
+        {/* Scroll indicator */}
+        <div className="absolute bottom-16 left-8 z-10 hidden lg:flex flex-col items-center gap-2">
+          <div className="w-px h-16 bg-gradient-to-b from-transparent via-white/20 to-transparent" />
+          <span className="text-white/20 text-[10px] tracking-[0.2em] uppercase rotate-90 origin-center translate-y-4">Scroll</span>
+        </div>
+
+        <style>{`
+          @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+          }
+        `}</style>
       </section>
 
       {/* About */}
