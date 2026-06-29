@@ -1,0 +1,599 @@
+import { useState, useEffect, useRef } from "react";
+import { Link, useLocation } from "wouter";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { motion, useInView, useAnimation } from "framer-motion";
+import { useSubmitContact } from "@workspace/api-client-react";
+import { useToast } from "@/hooks/use-toast";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+
+const contactSchema = z.object({
+  name: z.string().min(2, "Name is required"),
+  email: z.string().email("Valid email is required"),
+  phone: z.string().optional(),
+  subject: z.string().min(2, "Subject is required"),
+  message: z.string().min(10, "Message must be at least 10 characters"),
+});
+
+function AnimatedCounter({ end, duration = 2000, suffix = "" }: { end: number; duration?: number; suffix?: string }) {
+  const [count, setCount] = useState(0);
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true });
+
+  useEffect(() => {
+    if (!inView) return;
+    let startTime: number;
+    const animate = (timestamp: number) => {
+      if (!startTime) startTime = timestamp;
+      const progress = Math.min((timestamp - startTime) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setCount(Math.floor(eased * end));
+      if (progress < 1) requestAnimationFrame(animate);
+    };
+    requestAnimationFrame(animate);
+  }, [inView, end, duration]);
+
+  return <span ref={ref}>{count}{suffix}</span>;
+}
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0 },
+};
+
+const stagger = {
+  visible: { transition: { staggerChildren: 0.1 } },
+};
+
+export default function Home() {
+  const [scrolled, setScrolled] = useState(false);
+  const [activeStep, setActiveStep] = useState(0);
+  const [, setLocation] = useLocation();
+  const { toast } = useToast();
+  const contactMutation = useSubmitContact();
+
+  const form = useForm<z.infer<typeof contactSchema>>({
+    resolver: zodResolver(contactSchema),
+    defaultValues: { name: "", email: "", phone: "", subject: "", message: "" },
+  });
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 50);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const onSubmit = (values: z.infer<typeof contactSchema>) => {
+    contactMutation.mutate(
+      { data: values },
+      {
+        onSuccess: () => {
+          toast({ title: "Message Sent", description: "We'll get back to you shortly." });
+          form.reset();
+        },
+        onError: () => {
+          toast({ title: "Error", description: "Failed to send message. Please try again.", variant: "destructive" });
+        },
+      }
+    );
+  };
+
+  const services = [
+    { name: "Market Research", desc: "Deep market analysis and competitive intelligence to inform your procurement strategy with data-driven insights.", icon: "M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" },
+    { name: "Product Sourcing", desc: "Access our global network of verified suppliers to find the exact products you need at competitive prices.", icon: "M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" },
+    { name: "Procurement", desc: "End-to-end procurement management from RFQ to PO issuance, ensuring optimal terms and conditions.", icon: "M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" },
+    { name: "Supplier Vetting", desc: "Rigorous due diligence and verification of suppliers to protect your business from fraud and substandard quality.", icon: "M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" },
+    { name: "Quality Assurance", desc: "Comprehensive quality inspection and control processes ensuring every product meets your exact specifications.", icon: "M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" },
+    { name: "Supply Chain Management", desc: "Strategic optimization of your entire supply chain for maximum efficiency, resilience, and cost savings.", icon: "M13 10V3L4 14h7v7l9-11h-7z" },
+    { name: "Logistics Coordination", desc: "Seamless coordination of shipping, customs clearance, and last-mile delivery to get goods where they need to be.", icon: "M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" },
+    { name: "Business Advisory", desc: "Strategic consulting to help businesses build robust procurement frameworks and sustainable supplier relationships.", icon: "M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" },
+  ];
+
+  const whyChooseUs = [
+    { title: "Reliable Supplier Network", desc: "1,200+ pre-vetted manufacturers and suppliers across 45+ countries, ready to fulfill your requirements." },
+    { title: "Competitive Pricing", desc: "Our scale and relationships guarantee you get market-best pricing without compromising on quality." },
+    { title: "Fast Turnaround", desc: "Dedicated procurement teams deliver quotations within 24–48 hours and close deals in record time." },
+    { title: "Verified Manufacturers", desc: "Every supplier undergoes rigorous background checks, factory audits, and compliance verification." },
+    { title: "Global Procurement Expertise", desc: "Deep knowledge of international trade regulations, incoterms, and cross-border logistics." },
+    { title: "Quality Assurance", desc: "In-house QC inspectors and third-party lab testing ensure every shipment meets your standards." },
+    { title: "Professional Customer Support", desc: "Dedicated account managers available during business hours across multiple time zones." },
+    { title: "Technology Driven Process", desc: "Digital procurement workflows, real-time tracking, and transparent reporting at every stage." },
+  ];
+
+  const processSteps = [
+    { step: "01", title: "Research", desc: "We conduct thorough market research to understand your product requirements and market landscape." },
+    { step: "02", title: "Supplier Identification", desc: "Our global network is activated to identify the best-fit suppliers for your specific needs." },
+    { step: "03", title: "Quotation", desc: "We obtain competitive quotes, negotiate terms, and present you with a comprehensive comparison." },
+    { step: "04", title: "Procurement", desc: "Upon approval, we manage the entire purchase process including contract execution and payment terms." },
+    { step: "05", title: "Quality Inspection", desc: "Pre-shipment inspections are conducted to verify product quality against your specifications." },
+    { step: "06", title: "Shipping", desc: "We coordinate freight forwarding, export documentation, and customs clearance." },
+    { step: "07", title: "Delivery", desc: "End-to-end tracking and last-mile coordination ensures your goods arrive safely and on time." },
+  ];
+
+  const industries = [
+    { name: "Healthcare", icon: "M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" },
+    { name: "Manufacturing", icon: "M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" },
+    { name: "Construction", icon: "M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" },
+    { name: "Agriculture", icon: "M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" },
+    { name: "Retail", icon: "M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" },
+    { name: "Technology", icon: "M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" },
+    { name: "Hospitality", icon: "M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" },
+    { name: "Government", icon: "M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" },
+  ];
+
+  const testimonials = [
+    { name: "Sarah Mitchell", company: "TechNova Solutions", role: "Head of Procurement", text: "Just-In-Time Consultancy transformed our sourcing process completely. We cut procurement costs by 28% in the first year while improving supplier quality significantly. Their global network is genuinely impressive." },
+    { name: "David Okonkwo", company: "Meridian Healthcare Ltd", role: "Operations Director", text: "For medical equipment sourcing in markets where trust is everything, JIT has been an invaluable partner. Their supplier verification process is thorough and their team is incredibly responsive." },
+    { name: "Amara Diallo", company: "West Africa Trading Co.", role: "Managing Director", text: "We've worked with JIT on over 40 procurement projects across 12 countries. Their logistics coordination and customs expertise has saved us countless hours and significant costs." },
+    { name: "James Thornton", company: "Thornton Manufacturing Group", role: "CEO", text: "Professional, reliable, and results-driven. JIT helped us establish a robust supply chain for our new product line in under 3 months. I highly recommend them to any business scaling globally." },
+  ];
+
+  const faqs = [
+    { q: "How long does a typical procurement project take?", a: "Timelines vary based on complexity and product type. Simple sourcing requests are typically completed in 5–10 business days. Complex supply chain projects may take 4–8 weeks. We always provide a clear timeline upfront." },
+    { q: "Which countries do you source from?", a: "We source from 45+ countries globally, with strong networks in China, India, Southeast Asia, Europe, the Middle East, and Africa. Our team has local expertise in each region." },
+    { q: "How do you verify your suppliers?", a: "All suppliers undergo a rigorous vetting process including business registration verification, factory audits, trade reference checks, financial background checks, and compliance assessments. We maintain a regularly updated approved supplier database." },
+    { q: "What happens if the product quality doesn't meet our specifications?", a: "We conduct pre-shipment quality inspections at all our engagements. In the rare case of a quality issue, we manage the dispute resolution process with the supplier and ensure the matter is resolved — including replacements or refunds where applicable." },
+    { q: "Do you handle customs and import documentation?", a: "Yes. Our logistics team coordinates all export documentation, customs clearance, and import compliance. We work with licensed customs brokers in key jurisdictions to ensure smooth border crossings." },
+    { q: "What is your fee structure?", a: "We operate on a service fee model based on the scope of the engagement. Fees are agreed upfront before any work begins. Contact us for a detailed quote tailored to your specific requirements." },
+    { q: "Can you handle urgent or rush procurement requests?", a: "Yes, we offer expedited procurement services for time-sensitive requirements. Please indicate urgency in your request and our team will prioritize accordingly." },
+    { q: "Do you work with small businesses and startups?", a: "Absolutely. We work with businesses of all sizes — from solo e-commerce entrepreneurs to large multinational corporations. Our services scale to your needs and budget." },
+  ];
+
+  return (
+    <div className="min-h-screen bg-white">
+      {/* Navbar */}
+      <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled ? "bg-white/90 backdrop-blur-md shadow-md" : "bg-transparent"}`}>
+        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+          <div className="flex flex-col">
+            <span className="text-lg font-extrabold text-primary tracking-tight leading-tight">Just-In-Time Consultancy</span>
+            <span className="text-[11px] text-accent font-medium hidden md:block tracking-wide">Efficient Research & Smart Procurement Solutions</span>
+          </div>
+          <div className="hidden lg:flex items-center gap-8">
+            {[["About", "about"], ["Services", "services"], ["Process", "process"], ["Industries", "industries"], ["Contact", "contact"]].map(([label, id]) => (
+              <a key={id} href={`#${id}`} className="text-sm font-medium text-foreground/70 hover:text-primary transition-colors duration-200">{label}</a>
+            ))}
+          </div>
+          <Button onClick={() => setLocation("/request")} className="bg-accent hover:bg-accent/90 text-white font-semibold shadow-lg shadow-accent/20">
+            Request a Service
+          </Button>
+        </div>
+      </nav>
+
+      {/* Hero */}
+      <section className="min-h-screen flex items-center relative overflow-hidden bg-gradient-to-br from-primary via-primary/95 to-[#1a3a7a]">
+        <div className="absolute inset-0 opacity-10">
+          <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
+                <path d="M 60 0 L 0 0 0 60" fill="none" stroke="white" strokeWidth="0.5"/>
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#grid)"/>
+          </svg>
+        </div>
+        <div className="absolute top-20 right-20 w-96 h-96 bg-accent/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-20 left-10 w-64 h-64 bg-white/5 rounded-full blur-2xl" />
+        <div className="max-w-7xl mx-auto px-6 py-32 relative z-10">
+          <div className="max-w-3xl">
+            <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+              <span className="inline-block bg-accent/20 text-accent border border-accent/30 text-xs font-semibold tracking-widest uppercase px-4 py-2 rounded-full mb-6">
+                Global Procurement Consultancy
+              </span>
+            </motion.div>
+            <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }}
+              className="text-5xl md:text-7xl font-extrabold text-white leading-[1.05] tracking-tight mb-8">
+              Research.<br />
+              <span className="text-accent">Source.</span><br />
+              Procure. Deliver.
+            </motion.h1>
+            <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.25 }}
+              className="text-lg md:text-xl text-white/70 max-w-xl leading-relaxed mb-10">
+              Helping businesses source quality products smarter, faster, and more affordably — across 45+ countries and 1,200+ verified suppliers.
+            </motion.p>
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.4 }}
+              className="flex flex-col sm:flex-row gap-4">
+              <Button size="lg" onClick={() => setLocation("/request")}
+                className="bg-accent hover:bg-accent/90 text-white font-semibold text-base px-8 py-6 shadow-xl shadow-accent/30">
+                Request a Service
+              </Button>
+              <Button size="lg" variant="outline"
+                className="border-white/30 text-white hover:bg-white/10 text-base px-8 py-6 bg-white/5 backdrop-blur-sm"
+                onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}>
+                Book Consultation
+              </Button>
+            </motion.div>
+          </div>
+        </div>
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
+          <motion.div animate={{ y: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 2 }}>
+            <svg className="w-6 h-6 text-white/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* About */}
+      <section id="about" className="py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ duration: 0.6 }}>
+              <span className="text-accent font-semibold text-sm tracking-widest uppercase">About Us</span>
+              <h2 className="text-4xl font-extrabold text-primary mt-3 mb-6 leading-tight">Redefining Global Procurement Excellence</h2>
+              <p className="text-muted-foreground leading-relaxed mb-6">
+                Just-In-Time Consultancy was founded on a simple but powerful idea: that businesses of every size deserve access to the same procurement intelligence and supplier networks that large corporations rely on. We bridge the gap between buyers and the world's best manufacturers.
+              </p>
+              <p className="text-muted-foreground leading-relaxed mb-8">
+                With operations spanning four continents and deep expertise in cross-border trade, we've helped hundreds of businesses reduce procurement costs, eliminate supplier risk, and build supply chains that scale.
+              </p>
+              <div className="grid grid-cols-2 gap-6">
+                {[
+                  { label: "Mission", text: "Empower businesses through high-quality research, sourcing, and procurement solutions that save time, reduce costs, and improve operational efficiency." },
+                  { label: "Vision", text: "Become one of the leading global procurement and research consultancy firms through innovation, technology, and exceptional customer service." },
+                ].map(({ label, text }) => (
+                  <div key={label} className="border border-border rounded-xl p-5">
+                    <div className="w-8 h-1 bg-accent rounded-full mb-3" />
+                    <h4 className="font-bold text-primary mb-2">{label}</h4>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{text}</p>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+            <div className="space-y-0">
+              <h3 className="text-xl font-bold text-primary mb-8">Our Journey</h3>
+              {[
+                { year: "2016", title: "Founded", desc: "Started as a small sourcing consultancy serving local businesses." },
+                { year: "2018", title: "Global Expansion", desc: "Expanded operations to Asia and Europe, building our first major supplier network." },
+                { year: "2020", title: "Digital Transformation", desc: "Launched our digital procurement platform and quality management system." },
+                { year: "2022", title: "1,000+ Suppliers", desc: "Crossed the milestone of 1,000 verified suppliers across 40+ countries." },
+                { year: "2024", title: "350+ Clients Served", desc: "Proudly serving businesses across 45 countries with a 97% satisfaction rate." },
+              ].map(({ year, title, desc }, i) => (
+                <motion.div key={year} initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
+                  className="flex gap-6 pb-8 relative">
+                  <div className="flex flex-col items-center">
+                    <div className="w-10 h-10 rounded-full bg-accent flex items-center justify-center text-white text-xs font-bold shrink-0 z-10">{year.slice(2)}</div>
+                    {i < 4 && <div className="w-0.5 flex-1 bg-border mt-2" />}
+                  </div>
+                  <div className="pt-2">
+                    <p className="text-xs text-accent font-semibold tracking-wide">{year}</p>
+                    <h4 className="font-bold text-primary mt-1">{title}</h4>
+                    <p className="text-sm text-muted-foreground mt-1">{desc}</p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Services */}
+      <section id="services" className="py-24 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-6">
+          <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="text-center mb-16">
+            <span className="text-accent font-semibold text-sm tracking-widest uppercase">What We Do</span>
+            <h2 className="text-4xl font-extrabold text-primary mt-3 mb-4">Premium Services</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">Comprehensive procurement solutions designed for businesses that refuse to compromise on quality, speed, or value.</p>
+          </motion.div>
+          <motion.div variants={stagger} initial="hidden" whileInView="visible" viewport={{ once: true }} className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {services.map((service, i) => (
+              <motion.div key={service.name} variants={fadeUp} transition={{ duration: 0.5 }}>
+                <Card className="h-full group hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-border hover:border-accent/30 cursor-default bg-white">
+                  <CardHeader>
+                    <div className="w-12 h-12 rounded-xl bg-primary/5 flex items-center justify-center mb-4 group-hover:bg-accent transition-colors duration-300">
+                      <svg className="w-6 h-6 text-primary group-hover:text-white transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d={service.icon} />
+                      </svg>
+                    </div>
+                    <CardTitle className="text-base font-bold text-primary">{service.name}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{service.desc}</p>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Why Choose Us */}
+      <section className="py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-6">
+          <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="text-center mb-16">
+            <span className="text-accent font-semibold text-sm tracking-widest uppercase">Why Choose Us</span>
+            <h2 className="text-4xl font-extrabold text-primary mt-3 mb-4">Built for Results</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">Eight reasons why leading businesses trust Just-In-Time Consultancy with their most critical procurement needs.</p>
+          </motion.div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {whyChooseUs.map(({ title, desc }, i) => (
+              <motion.div key={title} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }}
+                className="p-6 rounded-2xl bg-gray-50 hover:bg-primary hover:text-white transition-all duration-300 group cursor-default">
+                <div className="w-8 h-8 rounded-lg bg-accent/10 group-hover:bg-accent/20 flex items-center justify-center mb-4">
+                  <span className="text-accent text-sm font-bold">{String(i + 1).padStart(2, "0")}</span>
+                </div>
+                <h4 className="font-bold text-primary group-hover:text-white mb-2 transition-colors">{title}</h4>
+                <p className="text-sm text-muted-foreground group-hover:text-white/70 leading-relaxed transition-colors">{desc}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Procurement Process */}
+      <section id="process" className="py-24 bg-primary">
+        <div className="max-w-7xl mx-auto px-6">
+          <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="text-center mb-16">
+            <span className="text-accent font-semibold text-sm tracking-widest uppercase">How It Works</span>
+            <h2 className="text-4xl font-extrabold text-white mt-3 mb-4">Our Procurement Process</h2>
+            <p className="text-white/60 max-w-2xl mx-auto">A proven seven-step methodology that ensures precision, transparency, and results at every stage.</p>
+          </motion.div>
+          <div className="grid md:grid-cols-7 gap-4">
+            {processSteps.map(({ step, title, desc }, i) => (
+              <motion.div key={step} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
+                className={`relative cursor-pointer rounded-2xl p-5 transition-all duration-300 ${activeStep === i ? "bg-accent text-white shadow-xl shadow-accent/30" : "bg-white/5 hover:bg-white/10 text-white"}`}
+                onClick={() => setActiveStep(i)}>
+                {i < processSteps.length - 1 && (
+                  <div className="hidden md:block absolute top-8 -right-2 w-4 z-10">
+                    <svg className="w-4 h-4 text-white/20" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd"/>
+                    </svg>
+                  </div>
+                )}
+                <div className={`text-xs font-bold mb-3 ${activeStep === i ? "text-white/80" : "text-accent"}`}>{step}</div>
+                <h4 className="font-bold text-sm mb-2">{title}</h4>
+                <p className={`text-xs leading-relaxed hidden lg:block ${activeStep === i ? "text-white/80" : "text-white/50"}`}>{desc}</p>
+              </motion.div>
+            ))}
+          </div>
+          <motion.div className="mt-8 p-6 bg-white/5 rounded-2xl" initial={{ opacity: 0 }} animate={{ opacity: 1 }} key={activeStep}>
+            <h4 className="text-accent font-bold mb-2">{processSteps[activeStep].step} — {processSteps[activeStep].title}</h4>
+            <p className="text-white/70">{processSteps[activeStep].desc}</p>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Industries */}
+      <section id="industries" className="py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-6">
+          <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="text-center mb-16">
+            <span className="text-accent font-semibold text-sm tracking-widest uppercase">Industries Served</span>
+            <h2 className="text-4xl font-extrabold text-primary mt-3 mb-4">Cross-Industry Expertise</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">Our procurement expertise spans the full spectrum of industries, each with its own compliance, quality, and supply chain demands.</p>
+          </motion.div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {industries.map(({ name, icon }, i) => (
+              <motion.div key={name} initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }}
+                className="group flex flex-col items-center gap-4 p-8 rounded-2xl bg-gray-50 hover:bg-primary hover:shadow-lg transition-all duration-300 cursor-default">
+                <div className="w-14 h-14 rounded-2xl bg-primary/5 group-hover:bg-white/10 flex items-center justify-center transition-colors">
+                  <svg className="w-7 h-7 text-primary group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d={icon} />
+                  </svg>
+                </div>
+                <span className="font-semibold text-sm text-primary group-hover:text-white transition-colors text-center">{name}</span>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Statistics */}
+      <section className="py-24 bg-accent">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-8 text-center">
+            {[
+              { end: 500, suffix: "+", label: "Projects Completed" },
+              { end: 350, suffix: "+", label: "Satisfied Clients" },
+              { end: 1200, suffix: "+", label: "Verified Suppliers" },
+              { end: 45, suffix: "+", label: "Countries Served" },
+              { end: 8, suffix: "+", label: "Years of Experience" },
+            ].map(({ end, suffix, label }, i) => (
+              <motion.div key={label} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
+                <div className="text-4xl md:text-5xl font-extrabold text-white mb-2">
+                  <AnimatedCounter end={end} suffix={suffix} />
+                </div>
+                <p className="text-white/70 text-sm font-medium">{label}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section className="py-24 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-6">
+          <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="text-center mb-16">
+            <span className="text-accent font-semibold text-sm tracking-widest uppercase">Client Stories</span>
+            <h2 className="text-4xl font-extrabold text-primary mt-3 mb-4">What Our Clients Say</h2>
+          </motion.div>
+          <div className="grid md:grid-cols-2 gap-6">
+            {testimonials.map(({ name, company, role, text }, i) => (
+              <motion.div key={name} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
+                <Card className="h-full bg-white border-border hover:shadow-lg transition-shadow duration-300">
+                  <CardContent className="p-8">
+                    <div className="flex gap-1 mb-4">
+                      {Array.from({ length: 5 }).map((_, j) => (
+                        <svg key={j} className="w-4 h-4 text-amber-400 fill-current" viewBox="0 0 20 20">
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                        </svg>
+                      ))}
+                    </div>
+                    <p className="text-foreground/80 leading-relaxed mb-6 italic">"{text}"</p>
+                    <div className="flex items-center gap-4">
+                      <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white text-sm font-bold">
+                        {name.charAt(0)}
+                      </div>
+                      <div>
+                        <p className="font-bold text-primary text-sm">{name}</p>
+                        <p className="text-xs text-muted-foreground">{role}, {company}</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="py-24 bg-white">
+        <div className="max-w-4xl mx-auto px-6">
+          <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="text-center mb-16">
+            <span className="text-accent font-semibold text-sm tracking-widest uppercase">FAQ</span>
+            <h2 className="text-4xl font-extrabold text-primary mt-3 mb-4">Frequently Asked Questions</h2>
+            <p className="text-muted-foreground">Everything you need to know about working with Just-In-Time Consultancy.</p>
+          </motion.div>
+          <Accordion type="single" collapsible className="space-y-3">
+            {faqs.map(({ q, a }, i) => (
+              <AccordionItem key={i} value={`faq-${i}`} className="border border-border rounded-xl px-6 data-[state=open]:shadow-md transition-shadow">
+                <AccordionTrigger className="text-left font-semibold text-primary hover:no-underline py-5">{q}</AccordionTrigger>
+                <AccordionContent className="text-muted-foreground leading-relaxed pb-5">{a}</AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </div>
+      </section>
+
+      {/* Contact */}
+      <section id="contact" className="py-24 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-6">
+          <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="text-center mb-16">
+            <span className="text-accent font-semibold text-sm tracking-widest uppercase">Contact Us</span>
+            <h2 className="text-4xl font-extrabold text-primary mt-3 mb-4">Ready to Optimize Your Procurement?</h2>
+            <p className="text-muted-foreground max-w-xl mx-auto">Our team of experts is ready to help. Send us a message and we'll get back to you within one business day.</p>
+          </motion.div>
+          <div className="grid lg:grid-cols-3 gap-10">
+            <div className="space-y-6">
+              {[
+                { label: "General Inquiries", value: "info@justintimeconsultancy.com", icon: "M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" },
+                { label: "Support", value: "support@justintimeconsultancy.com", icon: "M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" },
+                { label: "Business Hours", value: "Mon – Fri: 8:00 AM – 6:00 PM (GMT)", icon: "M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" },
+              ].map(({ label, value, icon }) => (
+                <div key={label} className="flex gap-4 p-5 rounded-xl bg-white border border-border">
+                  <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center shrink-0">
+                    <svg className="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d={icon} />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1">{label}</p>
+                    <p className="text-sm text-foreground font-medium">{value}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="lg:col-span-2">
+              <Card className="bg-white border-border shadow-sm">
+                <CardContent className="p-8">
+                  <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+                      <div className="grid md:grid-cols-2 gap-5">
+                        <FormField control={form.control} name="name" render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-sm font-semibold">Full Name</FormLabel>
+                            <FormControl><Input placeholder="John Doe" {...field} /></FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}/>
+                        <FormField control={form.control} name="email" render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-sm font-semibold">Email Address</FormLabel>
+                            <FormControl><Input type="email" placeholder="john@company.com" {...field} /></FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}/>
+                      </div>
+                      <div className="grid md:grid-cols-2 gap-5">
+                        <FormField control={form.control} name="phone" render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-sm font-semibold">Phone (Optional)</FormLabel>
+                            <FormControl><Input placeholder="+1 234 567 8900" {...field} /></FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}/>
+                        <FormField control={form.control} name="subject" render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-sm font-semibold">Subject</FormLabel>
+                            <FormControl><Input placeholder="Procurement Inquiry" {...field} /></FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}/>
+                      </div>
+                      <FormField control={form.control} name="message" render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-semibold">Message</FormLabel>
+                          <FormControl><Textarea placeholder="Tell us about your procurement needs..." className="min-h-[140px] resize-none" {...field} /></FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}/>
+                      <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-white font-semibold py-6 text-base" disabled={contactMutation.isPending}>
+                        {contactMutation.isPending ? "Sending..." : "Send Message"}
+                      </Button>
+                    </form>
+                  </Form>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-primary text-primary-foreground py-16">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid md:grid-cols-4 gap-10 mb-12">
+            <div className="md:col-span-2">
+              <h3 className="text-xl font-extrabold mb-2">Just-In-Time Consultancy</h3>
+              <p className="text-accent text-sm font-medium mb-4">Efficient Research & Smart Procurement Solutions</p>
+              <p className="text-primary-foreground/60 text-sm leading-relaxed max-w-xs">
+                Empowering businesses through precision procurement, global sourcing, and supply chain excellence.
+              </p>
+            </div>
+            <div>
+              <h4 className="font-bold text-sm uppercase tracking-wide mb-4">Quick Links</h4>
+              <ul className="space-y-2">
+                {[["About", "about"], ["Services", "services"], ["Process", "process"], ["Industries", "industries"], ["Contact", "contact"]].map(([label, id]) => (
+                  <li key={id}><a href={`#${id}`} className="text-sm text-primary-foreground/60 hover:text-accent transition-colors">{label}</a></li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-bold text-sm uppercase tracking-wide mb-4">Contact</h4>
+              <ul className="space-y-2 text-sm text-primary-foreground/60">
+                <li>info@justintimeconsultancy.com</li>
+                <li>support@justintimeconsultancy.com</li>
+                <li>Mon – Fri: 8AM – 6PM GMT</li>
+              </ul>
+            </div>
+          </div>
+          <div className="border-t border-primary-foreground/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p className="text-sm text-primary-foreground/40">
+              © {new Date().getFullYear()} Just-In-Time Consultancy. All rights reserved.
+            </p>
+            <button onClick={() => setLocation("/admin")} className="text-xs text-primary-foreground/20 hover:text-primary-foreground/40 transition-colors">
+              Admin
+            </button>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+}

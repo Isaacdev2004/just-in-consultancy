@@ -3,13 +3,22 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Just-In-Time Consultancy API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: requests
+    description: Procurement request operations
+  - name: admin
+    description: Admin operations
+  - name: contact
+    description: Contact form
+  - name: analytics
+    description: Dashboard analytics
+
 paths:
   /healthz:
     get:
@@ -24,6 +33,270 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /requests:
+    post:
+      operationId: submitRequest
+      tags: [requests]
+      summary: Submit a procurement request
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ServiceRequestInput"
+      responses:
+        "201":
+          description: Request submitted successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServiceRequest"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /admin/login:
+    post:
+      operationId: adminLogin
+      tags: [admin]
+      summary: Admin login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AdminLoginInput"
+      responses:
+        "200":
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminAuthResult"
+        "401":
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /admin/logout:
+    post:
+      operationId: adminLogout
+      tags: [admin]
+      summary: Admin logout
+      responses:
+        "200":
+          description: Logged out
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+  /admin/me:
+    get:
+      operationId: getAdminMe
+      tags: [admin]
+      summary: Get current admin session
+      responses:
+        "200":
+          description: Current admin
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminUser"
+        "401":
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /admin/requests:
+    get:
+      operationId: listAdminRequests
+      tags: [admin]
+      summary: List all procurement requests (admin)
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [pending, in_progress, completed, cancelled]
+        - name: search
+          in: query
+          schema:
+            type: string
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        "200":
+          description: List of requests
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServiceRequestList"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /admin/requests/{id}:
+    get:
+      operationId: getAdminRequest
+      tags: [admin]
+      summary: Get a specific request (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Request details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServiceRequest"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+    patch:
+      operationId: updateAdminRequest
+      tags: [admin]
+      summary: Update request status or notes (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ServiceRequestUpdate"
+      responses:
+        "200":
+          description: Updated request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServiceRequest"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+    delete:
+      operationId: deleteAdminRequest
+      tags: [admin]
+      summary: Delete a request (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /admin/requests/export:
+    get:
+      operationId: exportAdminRequests
+      tags: [admin]
+      summary: Export requests as CSV data
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [pending, in_progress, completed, cancelled]
+      responses:
+        "200":
+          description: CSV export data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExportResponse"
+
+  /admin/analytics:
+    get:
+      operationId: getAnalytics
+      tags: [analytics]
+      summary: Get dashboard analytics
+      responses:
+        "200":
+          description: Analytics data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnalyticsData"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /contact:
+    post:
+      operationId: submitContact
+      tags: [contact]
+      summary: Submit a contact message
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ContactInput"
+      responses:
+        "201":
+          description: Message sent
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +307,273 @@ components:
       required:
         - status
 
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error
+
+    SuccessResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+        - message
+
+    ServiceRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        requestId:
+          type: string
+        companyName:
+          type: string
+        contactPerson:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        country:
+          type: string
+        productName:
+          type: string
+        productCategory:
+          type: string
+        description:
+          type: string
+        quantity:
+          type: string
+        expectedBudget:
+          type: string
+        preferredDeliveryCountry:
+          type: string
+        requiredDeliveryDate:
+          type: ["string", "null"]
+        additionalNotes:
+          type: ["string", "null"]
+        status:
+          type: string
+          enum: [pending, in_progress, completed, cancelled]
+        adminNotes:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+      required:
+        - id
+        - requestId
+        - companyName
+        - contactPerson
+        - email
+        - phone
+        - country
+        - productName
+        - productCategory
+        - description
+        - quantity
+        - expectedBudget
+        - preferredDeliveryCountry
+        - status
+        - createdAt
+        - updatedAt
+
+    ServiceRequestInput:
+      type: object
+      properties:
+        companyName:
+          type: string
+        contactPerson:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        country:
+          type: string
+        productName:
+          type: string
+        productCategory:
+          type: string
+        description:
+          type: string
+        quantity:
+          type: string
+        expectedBudget:
+          type: string
+        preferredDeliveryCountry:
+          type: string
+        requiredDeliveryDate:
+          type: ["string", "null"]
+        additionalNotes:
+          type: ["string", "null"]
+      required:
+        - companyName
+        - contactPerson
+        - email
+        - phone
+        - country
+        - productName
+        - productCategory
+        - description
+        - quantity
+        - expectedBudget
+        - preferredDeliveryCountry
+
+    ServiceRequestUpdate:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [pending, in_progress, completed, cancelled]
+        adminNotes:
+          type: ["string", "null"]
+
+    ServiceRequestList:
+      type: object
+      properties:
+        requests:
+          type: array
+          items:
+            $ref: "#/components/schemas/ServiceRequest"
+        total:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
+        totalPages:
+          type: integer
+      required:
+        - requests
+        - total
+        - page
+        - limit
+        - totalPages
+
+    AdminLoginInput:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+      required:
+        - username
+        - password
+
+    AdminAuthResult:
+      type: object
+      properties:
+        message:
+          type: string
+        admin:
+          $ref: "#/components/schemas/AdminUser"
+      required:
+        - message
+        - admin
+
+    AdminUser:
+      type: object
+      properties:
+        id:
+          type: integer
+        username:
+          type: string
+      required:
+        - id
+        - username
+
+    AnalyticsData:
+      type: object
+      properties:
+        totalRequests:
+          type: integer
+        pendingRequests:
+          type: integer
+        inProgressRequests:
+          type: integer
+        completedRequests:
+          type: integer
+        cancelledRequests:
+          type: integer
+        recentRequests:
+          type: array
+          items:
+            $ref: "#/components/schemas/ServiceRequest"
+        requestsByCategory:
+          type: array
+          items:
+            $ref: "#/components/schemas/CategoryCount"
+        requestsByMonth:
+          type: array
+          items:
+            $ref: "#/components/schemas/MonthlyCount"
+      required:
+        - totalRequests
+        - pendingRequests
+        - inProgressRequests
+        - completedRequests
+        - cancelledRequests
+        - recentRequests
+        - requestsByCategory
+        - requestsByMonth
+
+    CategoryCount:
+      type: object
+      properties:
+        category:
+          type: string
+        count:
+          type: integer
+      required:
+        - category
+        - count
+
+    MonthlyCount:
+      type: object
+      properties:
+        month:
+          type: string
+        count:
+          type: integer
+      required:
+        - month
+        - count
+
+    ContactInput:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: ["string", "null"]
+        subject:
+          type: string
+        message:
+          type: string
+      required:
+        - name
+        - email
+        - subject
+        - message
+
+    ExportResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/ServiceRequest"
+        filename:
+          type: string
+      required:
+        - data
+        - filename

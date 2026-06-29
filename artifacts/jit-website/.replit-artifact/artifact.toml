@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Just-In-Time Consultancy"
+version = "1.0.0"
+id = "artifacts/jit-website"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 22870
+
+[services.development]
+run = "pnpm --filter @workspace/jit-website run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/jit-website", "run", "build" ]
+publicDir = "artifacts/jit-website/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "22870"
+BASE_PATH = "/"
