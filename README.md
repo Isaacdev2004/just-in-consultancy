@@ -13,6 +13,10 @@ A premium full-stack business website for a global procurement consultancy, with
 - `pnpm --filter @workspace/scripts run seed-admin` — seed admin user (username: admin, password: admin123)
 - Required env: `DATABASE_URL`, `SESSION_SECRET`, `PORT`
 
+## Deploy to Render
+
+See **[DEPLOY.md](./DEPLOY.md)** for full Render deployment steps (PostgreSQL, env vars, blueprint, and troubleshooting).
+
 ## Stack
 
 - pnpm workspaces, Node.js 24, TypeScript 5.9

@@ -1,5 +1,7 @@
 import express, { type Express } from "express";
 import cors from "cors";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import pinoHttp from "pino-http";
 import session from "express-session";
 import connectPgSimple from "connect-pg-simple";
@@ -8,6 +10,10 @@ import { logger } from "./lib/logger";
 import { pool } from "@workspace/db";
 
 const app: Express = express();
+
+if (process.env.NODE_ENV === "production") {
+  app.set("trust proxy", 1);
+}
 
 const PgSession = connectPgSimple(session);
 
@@ -56,11 +62,23 @@ app.use(
       secure: process.env.NODE_ENV === "production",
       httpOnly: true,
       maxAge: 7 * 24 * 60 * 60 * 1000,
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      sameSite: "lax",
     },
   })
 );
 
 app.use("/api", router);
+
+if (process.env.NODE_ENV === "production") {
+  const frontendDir = path.resolve(
+    fileURLToPath(new URL(".", import.meta.url)),
+    "../../jit-website/dist/public",
+  );
+
+  app.use(express.static(frontendDir));
+  app.use((_req, res) => {
+    res.sendFile(path.join(frontendDir, "index.html"));
+  });
+}
 
 export default app;
