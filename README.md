@@ -10,7 +10,7 @@ A premium full-stack business website for a global procurement consultancy, with
 - `pnpm run build` — typecheck + build all packages
 - `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks and Zod schemas from the OpenAPI spec
 - `pnpm --filter @workspace/db run push` — push DB schema changes (dev only)
-- `pnpm --filter @workspace/scripts run seed-admin` — seed admin user (username: admin, password: admin123)
+- `pnpm --filter @workspace/scripts run seed-admin` — seed admin user (username: admin@justinconsultancy.com)
 - Required env: `DATABASE_URL`, `SESSION_SECRET`, `PORT`
 
 ## Deploy to Render
@@ -62,6 +62,6 @@ See **[DEPLOY.md](./DEPLOY.md)** for full Render deployment steps (PostgreSQL, e
 ## Gotchas
 
 - **tsx for API dev**: The `dev` script uses `tsx` (not build+start) to avoid port EADDRINUSE on restarts. Never revert to build+start for dev.
-- **Admin credentials**: username=`admin`, password=`admin123`. Re-run `pnpm --filter @workspace/scripts run seed-admin` to reset.
+- **Admin credentials**: username=`admin@justinconsultancy.com`. Re-run `pnpm --filter @workspace/scripts run seed-admin` to reset the password.
 - **zod import**: Use `"zod"` (not `"zod/v4"`) in server route files.
 - **Express 5 params types**: `req.params.id` is typed as `string | string[]` — always cast with `String(req.params.id)`.

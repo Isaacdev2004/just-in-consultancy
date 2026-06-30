@@ -2,12 +2,15 @@ import { db } from "@workspace/db";
 import { adminUsersTable } from "@workspace/db";
 import bcrypt from "bcryptjs";
 
+const ADMIN_USERNAME = "admin@justinconsultancy.com";
+const ADMIN_PASSWORD = "Admin@123!";
+
 async function main() {
-  const hash = await bcrypt.hash("admin123", 10);
+  const hash = await bcrypt.hash(ADMIN_PASSWORD, 10);
   await db.insert(adminUsersTable)
-    .values({ username: "admin", passwordHash: hash })
+    .values({ username: ADMIN_USERNAME, passwordHash: hash })
     .onConflictDoUpdate({ target: adminUsersTable.username, set: { passwordHash: hash } });
-  console.log("Admin seeded: username=admin, password=admin123");
+  console.log(`Admin seeded: username=${ADMIN_USERNAME}`);
   process.exit(0);
 }
 

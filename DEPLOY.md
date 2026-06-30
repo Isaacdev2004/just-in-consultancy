@@ -102,10 +102,10 @@ First deploy takes ~5–10 minutes (install + build + DB schema push + admin see
 
 | Field | Value |
 |-------|-------|
-| Username | `admin` |
-| Password | `admin123` |
+| Username | `admin@justinconsultancy.com` |
+| Password | `Admin@123!` |
 
-**Change the password immediately** after first login in production (or update `scripts/src/seed-admin.ts` and redeploy).
+Re-run `pnpm --filter @workspace/scripts run seed-admin` to reset the password after deploy.
 
 ### Custom domain (optional)
 
@@ -124,7 +124,7 @@ pnpm run build:render
 #   1. Build React frontend → artifacts/jit-website/dist/public
 #   2. Build API server     → artifacts/api-server/dist/
 #   3. Push DB schema       → drizzle-kit push
-#   4. Seed admin user      → username admin / password admin123
+#   4. Seed admin user      → admin@justinconsultancy.com
 ```
 
 Start command:
