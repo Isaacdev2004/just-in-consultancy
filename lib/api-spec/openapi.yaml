@@ -253,6 +253,89 @@ paths:
               schema:
                 $ref: "#/components/schemas/ExportResponse"
 
+  /admin/messages:
+    get:
+      operationId: listAdminMessages
+      tags: [admin]
+      summary: List contact form messages (admin)
+      parameters:
+        - name: search
+          in: query
+          schema:
+            type: string
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        "200":
+          description: List of contact messages
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContactMessageList"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /admin/messages/{id}:
+    get:
+      operationId: getAdminMessage
+      tags: [admin]
+      summary: Get a specific contact message (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Message details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ContactMessage"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+    delete:
+      operationId: deleteAdminMessage
+      tags: [admin]
+      summary: Delete a contact message (admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
   /admin/analytics:
     get:
       operationId: getAnalytics
@@ -502,10 +585,16 @@ components:
           type: integer
         cancelledRequests:
           type: integer
+        totalContactMessages:
+          type: integer
         recentRequests:
           type: array
           items:
             $ref: "#/components/schemas/ServiceRequest"
+        recentContactMessages:
+          type: array
+          items:
+            $ref: "#/components/schemas/ContactMessage"
         requestsByCategory:
           type: array
           items:
@@ -520,7 +609,9 @@ components:
         - inProgressRequests
         - completedRequests
         - cancelledRequests
+        - totalContactMessages
         - recentRequests
+        - recentContactMessages
         - requestsByCategory
         - requestsByMonth
 
@@ -564,6 +655,53 @@ components:
         - email
         - subject
         - message
+
+    ContactMessage:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: ["string", "null"]
+        subject:
+          type: string
+        message:
+          type: string
+        createdAt:
+          type: string
+      required:
+        - id
+        - name
+        - email
+        - subject
+        - message
+        - createdAt
+
+    ContactMessageList:
+      type: object
+      properties:
+        messages:
+          type: array
+          items:
+            $ref: "#/components/schemas/ContactMessage"
+        total:
+          type: integer
+        page:
+          type: integer
+        limit:
+          type: integer
+        totalPages:
+          type: integer
+      required:
+        - messages
+        - total
+        - page
+        - limit
+        - totalPages
 
     ExportResponse:
       type: object

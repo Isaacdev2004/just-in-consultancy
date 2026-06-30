@@ -25,10 +25,13 @@ import type {
   AdminUser,
   AnalyticsData,
   ContactInput,
+  ContactMessage,
+  ContactMessageList,
   ErrorResponse,
   ExportAdminRequestsParams,
   ExportResponse,
   HealthStatus,
+  ListAdminMessagesParams,
   ListAdminRequestsParams,
   ServiceRequest,
   ServiceRequestInput,
@@ -814,6 +817,237 @@ export function useExportAdminRequests<TData = Awaited<ReturnType<typeof exportA
 
 
 
+
+export const getListAdminMessagesUrl = (params?: ListAdminMessagesParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/admin/messages?${stringifiedParams}` : `/api/admin/messages`
+}
+
+/**
+ * @summary List contact form messages (admin)
+ */
+export const listAdminMessages = async (params?: ListAdminMessagesParams, options?: RequestInit): Promise<ContactMessageList> => {
+
+  return customFetch<ContactMessageList>(getListAdminMessagesUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListAdminMessagesQueryKey = (params?: ListAdminMessagesParams,) => {
+    return [
+    `/api/admin/messages`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getListAdminMessagesQueryOptions = <TData = Awaited<ReturnType<typeof listAdminMessages>>, TError = ErrorType<ErrorResponse>>(params?: ListAdminMessagesParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listAdminMessages>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListAdminMessagesQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listAdminMessages>>> = ({ signal }) => listAdminMessages(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listAdminMessages>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListAdminMessagesQueryResult = NonNullable<Awaited<ReturnType<typeof listAdminMessages>>>
+export type ListAdminMessagesQueryError = ErrorType<ErrorResponse>
+
+
+/**
+ * @summary List contact form messages (admin)
+ */
+
+export function useListAdminMessages<TData = Awaited<ReturnType<typeof listAdminMessages>>, TError = ErrorType<ErrorResponse>>(
+ params?: ListAdminMessagesParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listAdminMessages>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListAdminMessagesQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getGetAdminMessageUrl = (id: number,) => {
+
+
+
+
+  return `/api/admin/messages/${id}`
+}
+
+/**
+ * @summary Get a specific contact message (admin)
+ */
+export const getAdminMessage = async (id: number, options?: RequestInit): Promise<ContactMessage> => {
+
+  return customFetch<ContactMessage>(getGetAdminMessageUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetAdminMessageQueryKey = (id: number,) => {
+    return [
+    `/api/admin/messages/${id}`
+    ] as const;
+    }
+
+
+export const getGetAdminMessageQueryOptions = <TData = Awaited<ReturnType<typeof getAdminMessage>>, TError = ErrorType<ErrorResponse>>(id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getAdminMessage>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetAdminMessageQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getAdminMessage>>> = ({ signal }) => getAdminMessage(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getAdminMessage>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetAdminMessageQueryResult = NonNullable<Awaited<ReturnType<typeof getAdminMessage>>>
+export type GetAdminMessageQueryError = ErrorType<ErrorResponse>
+
+
+/**
+ * @summary Get a specific contact message (admin)
+ */
+
+export function useGetAdminMessage<TData = Awaited<ReturnType<typeof getAdminMessage>>, TError = ErrorType<ErrorResponse>>(
+ id: number, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getAdminMessage>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetAdminMessageQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getDeleteAdminMessageUrl = (id: number,) => {
+
+
+
+
+  return `/api/admin/messages/${id}`
+}
+
+/**
+ * @summary Delete a contact message (admin)
+ */
+export const deleteAdminMessage = async (id: number, options?: RequestInit): Promise<SuccessResponse> => {
+
+  return customFetch<SuccessResponse>(getDeleteAdminMessageUrl(id),
+  {
+    ...options,
+    method: 'DELETE'
+
+
+  }
+);}
+
+
+
+
+export const getDeleteAdminMessageMutationOptions = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteAdminMessage>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteAdminMessage>>, TError,{id: number}, TContext> => {
+
+const mutationKey = ['deleteAdminMessage'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteAdminMessage>>, {id: number}> = (props) => {
+          const {id} = props ?? {};
+
+          return  deleteAdminMessage(id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteAdminMessageMutationResult = NonNullable<Awaited<ReturnType<typeof deleteAdminMessage>>>
+
+    export type DeleteAdminMessageMutationError = ErrorType<ErrorResponse>
+
+    /**
+ * @summary Delete a contact message (admin)
+ */
+export const useDeleteAdminMessage = <TError = ErrorType<ErrorResponse>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteAdminMessage>>, TError,{id: number}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof deleteAdminMessage>>,
+        TError,
+        {id: number},
+        TContext
+      > => {
+      return useMutation(getDeleteAdminMessageMutationOptions(options));
+    }
 
 export const getGetAnalyticsUrl = () => {
 

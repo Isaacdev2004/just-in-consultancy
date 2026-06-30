@@ -8,10 +8,14 @@ import {
   getGetAnalyticsQueryKey,
   useListAdminRequests,
   getListAdminRequestsQueryKey,
+  useListAdminMessages,
+  getListAdminMessagesQueryKey,
   useUpdateAdminRequest,
   useDeleteAdminRequest,
+  useDeleteAdminMessage,
   useExportAdminRequests,
   getExportAdminRequestsQueryKey,
+  type ContactMessage,
 } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -53,7 +57,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-type Tab = "overview" | "requests";
+type Tab = "overview" | "requests" | "messages";
 type RequestStatus = "pending" | "in_progress" | "completed" | "cancelled";
 
 const STATUS_COLORS: Record<RequestStatus, string> = {
@@ -79,13 +83,17 @@ export default function AdminDashboard() {
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [selectedRequest, setSelectedRequest] = useState<null | { id: number; [key: string]: unknown }>(null);
+  const [selectedMessage, setSelectedMessage] = useState<ContactMessage | null>(null);
   const [editStatus, setEditStatus] = useState<RequestStatus>("pending");
   const [editNotes, setEditNotes] = useState("");
   const [page, setPage] = useState(1);
+  const [messageSearchQuery, setMessageSearchQuery] = useState("");
+  const [messagePage, setMessagePage] = useState(1);
 
   const logoutMutation = useAdminLogout();
   const updateMutation = useUpdateAdminRequest();
   const deleteMutation = useDeleteAdminRequest();
+  const deleteMessageMutation = useDeleteAdminMessage();
 
   const { data: admin, isLoading: isLoadingAuth, error: authError } = useGetAdminMe({
     query: { queryKey: getGetAdminMeQueryKey(), retry: false },
@@ -104,7 +112,18 @@ export default function AdminDashboard() {
 
   const { data: requestsData, isLoading: isLoadingRequests } = useListAdminRequests(
     requestParams,
-    { query: { queryKey: getListAdminRequestsQueryKey(requestParams), enabled: !!admin } }
+    { query: { queryKey: getListAdminRequestsQueryKey(requestParams), enabled: !!admin && activeTab === "requests" } }
+  );
+
+  const messageParams = {
+    ...(messageSearchQuery && { search: messageSearchQuery }),
+    page: messagePage,
+    limit: 15,
+  };
+
+  const { data: messagesData, isLoading: isLoadingMessages } = useListAdminMessages(
+    messageParams,
+    { query: { queryKey: getListAdminMessagesQueryKey(messageParams), enabled: !!admin && activeTab === "messages" } }
   );
 
   const { data: exportData } = useExportAdminRequests(
@@ -170,6 +189,22 @@ export default function AdminDashboard() {
     );
   };
 
+  const handleDeleteMessage = (id: number) => {
+    if (!confirm("Are you sure you want to delete this message?")) return;
+    deleteMessageMutation.mutate(
+      { id },
+      {
+        onSuccess: () => {
+          toast({ title: "Deleted", description: "Contact message removed." });
+          queryClient.invalidateQueries({ queryKey: getListAdminMessagesQueryKey(messageParams) });
+          queryClient.invalidateQueries({ queryKey: getGetAnalyticsQueryKey() });
+          setSelectedMessage(null);
+        },
+        onError: () => toast({ title: "Error", description: "Failed to delete message.", variant: "destructive" }),
+      }
+    );
+  };
+
   const handleExport = () => {
     queryClient.fetchQuery({ queryKey: getExportAdminRequestsQueryKey({}), queryFn: async () => null }).catch(() => {});
     if (!requestsData?.requests) return;
@@ -190,11 +225,18 @@ export default function AdminDashboard() {
 
   const statCards = [
     { label: "Total Requests", value: analytics?.totalRequests || 0, color: "text-primary" },
+    { label: "Contact Messages", value: analytics?.totalContactMessages || 0, color: "text-violet-600" },
     { label: "Pending", value: analytics?.pendingRequests || 0, color: "text-amber-600" },
     { label: "In Progress", value: analytics?.inProgressRequests || 0, color: "text-blue-600" },
     { label: "Completed", value: analytics?.completedRequests || 0, color: "text-emerald-600" },
     { label: "Cancelled", value: analytics?.cancelledRequests || 0, color: "text-red-500" },
   ];
+
+  const tabLabels: Record<Tab, { title: string; subtitle: string }> = {
+    overview: { title: "Dashboard Overview", subtitle: "Analytics and recent activity" },
+    requests: { title: "Procurement Requests", subtitle: "Manage all client procurement requests" },
+    messages: { title: "Contact Messages", subtitle: "Messages from the homepage contact form" },
+  };
 
   return (
     <div className="min-h-screen bg-secondary flex">
@@ -205,20 +247,26 @@ export default function AdminDashboard() {
           <p className="text-xs text-white/60">Admin Portal</p>
         </div>
         <nav className="flex-1 p-4 space-y-1">
-          {(["overview", "requests"] as Tab[]).map((tab) => (
+          {([
+            { id: "overview" as Tab, label: "Overview", icon: "grid" },
+            { id: "requests" as Tab, label: "All Requests", icon: "clipboard" },
+            { id: "messages" as Tab, label: "Contact Messages", icon: "mail" },
+          ]).map(({ id, label, icon }) => (
             <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors text-left capitalize ${
-                activeTab === tab ? "bg-accent text-accent-foreground" : "text-white/60 hover:bg-white/10 hover:text-white"
+              key={id}
+              onClick={() => setActiveTab(id)}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors text-left ${
+                activeTab === id ? "bg-accent text-accent-foreground" : "text-white/60 hover:bg-white/10 hover:text-white"
               }`}
             >
-              {tab === "overview" ? (
+              {icon === "grid" ? (
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg>
-              ) : (
+              ) : icon === "clipboard" ? (
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>
+              ) : (
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
               )}
-              {tab === "overview" ? "Overview" : "All Requests"}
+              {label}
             </button>
           ))}
         </nav>
@@ -244,10 +292,8 @@ export default function AdminDashboard() {
         <div className="p-8 max-w-7xl mx-auto space-y-8">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-extrabold text-primary capitalize">{activeTab === "overview" ? "Dashboard Overview" : "Procurement Requests"}</h1>
-              <p className="text-sm text-muted-foreground mt-1">
-                {activeTab === "overview" ? "Analytics and recent activity" : "Manage all client procurement requests"}
-              </p>
+              <h1 className="text-2xl font-extrabold text-primary">{tabLabels[activeTab].title}</h1>
+              <p className="text-sm text-muted-foreground mt-1">{tabLabels[activeTab].subtitle}</p>
             </div>
             {activeTab === "requests" && (
               <Button onClick={handleExport} variant="outline" className="gap-2">
@@ -260,7 +306,7 @@ export default function AdminDashboard() {
           {activeTab === "overview" && (
             <>
               {/* Stats */}
-              <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                 {statCards.map(({ label, value, color }) => (
                   <Card key={label} className="bg-white border-border">
                     <CardHeader className="pb-2 pt-5 px-5">
@@ -351,6 +397,44 @@ export default function AdminDashboard() {
                           <TableCell className="text-muted-foreground">{r.country}</TableCell>
                           <TableCell><StatusBadge status={r.status} /></TableCell>
                           <TableCell className="text-muted-foreground text-sm">{new Date(r.createdAt).toLocaleDateString()}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </CardContent>
+              </Card>
+
+              {/* Recent Contact Messages */}
+              <Card className="bg-white border-border">
+                <CardHeader className="flex flex-row items-center justify-between">
+                  <CardTitle className="text-base font-bold text-primary">Recent Contact Messages</CardTitle>
+                  {(analytics?.totalContactMessages ?? 0) > 0 && (
+                    <Button variant="ghost" size="sm" className="text-xs" onClick={() => setActiveTab("messages")}>
+                      View all
+                    </Button>
+                  )}
+                </CardHeader>
+                <CardContent>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Name</TableHead>
+                        <TableHead>Email</TableHead>
+                        <TableHead>Subject</TableHead>
+                        <TableHead>Date</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {!analytics?.recentContactMessages?.length ? (
+                        <TableRow>
+                          <TableCell colSpan={4} className="text-center py-10 text-muted-foreground">No contact messages yet</TableCell>
+                        </TableRow>
+                      ) : analytics.recentContactMessages.map((m) => (
+                        <TableRow key={m.id}>
+                          <TableCell className="font-medium">{m.name}</TableCell>
+                          <TableCell className="text-muted-foreground">{m.email}</TableCell>
+                          <TableCell className="text-muted-foreground max-w-[200px] truncate">{m.subject}</TableCell>
+                          <TableCell className="text-muted-foreground text-sm">{new Date(m.createdAt).toLocaleDateString()}</TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
@@ -456,8 +540,119 @@ export default function AdminDashboard() {
               )}
             </>
           )}
+
+          {activeTab === "messages" && (
+            <>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <div className="flex-1">
+                  <Input
+                    placeholder="Search by name, email, subject, or message..."
+                    value={messageSearchQuery}
+                    onChange={(e) => { setMessageSearchQuery(e.target.value); setMessagePage(1); }}
+                    className="bg-white"
+                  />
+                </div>
+              </div>
+
+              <Card className="bg-white border-border">
+                <CardContent className="p-0">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Name</TableHead>
+                        <TableHead>Email</TableHead>
+                        <TableHead>Subject</TableHead>
+                        <TableHead>Date</TableHead>
+                        <TableHead className="text-right">Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {isLoadingMessages ? (
+                        <TableRow>
+                          <TableCell colSpan={5} className="text-center py-12 text-muted-foreground">
+                            <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-2" />
+                            Loading...
+                          </TableCell>
+                        </TableRow>
+                      ) : messagesData?.messages.length === 0 ? (
+                        <TableRow>
+                          <TableCell colSpan={5} className="text-center py-12 text-muted-foreground">No contact messages found</TableCell>
+                        </TableRow>
+                      ) : messagesData?.messages.map((m) => (
+                        <TableRow key={m.id} className="hover:bg-secondary/80">
+                          <TableCell className="font-medium">{m.name}</TableCell>
+                          <TableCell className="text-muted-foreground">{m.email}</TableCell>
+                          <TableCell className="text-muted-foreground max-w-[180px] truncate">{m.subject}</TableCell>
+                          <TableCell className="text-muted-foreground text-xs">{new Date(m.createdAt).toLocaleDateString()}</TableCell>
+                          <TableCell className="text-right">
+                            <div className="flex items-center justify-end gap-2">
+                              <Button size="sm" variant="ghost" className="h-7 text-xs" onClick={() => setSelectedMessage(m)}>
+                                View
+                              </Button>
+                              <Button size="sm" variant="ghost" className="h-7 text-xs text-red-500 hover:text-red-700 hover:bg-red-50"
+                                onClick={() => handleDeleteMessage(m.id)}
+                                disabled={deleteMessageMutation.isPending}>
+                                Delete
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </CardContent>
+              </Card>
+
+              {messagesData && messagesData.totalPages > 1 && (
+                <div className="flex justify-between items-center text-sm text-muted-foreground">
+                  <span>Showing {messagesData.messages.length} of {messagesData.total} messages</span>
+                  <div className="flex gap-2">
+                    <Button variant="outline" size="sm" disabled={messagePage <= 1} onClick={() => setMessagePage(p => p - 1)}>Previous</Button>
+                    <span className="px-3 py-1 rounded border text-xs">{messagePage} / {messagesData.totalPages}</span>
+                    <Button variant="outline" size="sm" disabled={messagePage >= messagesData.totalPages} onClick={() => setMessagePage(p => p + 1)}>Next</Button>
+                  </div>
+                </div>
+              )}
+            </>
+          )}
         </div>
       </main>
+
+      {/* Message Dialog */}
+      {selectedMessage && (
+        <Dialog open={!!selectedMessage} onOpenChange={() => setSelectedMessage(null)}>
+          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="text-primary">{selectedMessage.subject}</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4 text-sm">
+              <div className="grid grid-cols-2 gap-4 p-4 bg-secondary rounded-lg">
+                {[
+                  ["Name", selectedMessage.name],
+                  ["Email", selectedMessage.email],
+                  ["Phone", selectedMessage.phone || "—"],
+                  ["Date", new Date(selectedMessage.createdAt).toLocaleString()],
+                ].map(([label, value]) => (
+                  <div key={label}>
+                    <p className="text-xs text-muted-foreground uppercase tracking-wide">{label}</p>
+                    <p className="font-medium text-primary mt-0.5">{value}</p>
+                  </div>
+                ))}
+              </div>
+              <div className="p-4 bg-secondary rounded-lg">
+                <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1">Message</p>
+                <p className="text-foreground leading-relaxed whitespace-pre-wrap">{selectedMessage.message}</p>
+              </div>
+              <div className="flex gap-3">
+                <Button variant="outline" onClick={() => setSelectedMessage(null)}>Close</Button>
+                <Button variant="destructive" onClick={() => handleDeleteMessage(selectedMessage.id)} disabled={deleteMessageMutation.isPending}>
+                  Delete
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
 
       {/* Edit Dialog */}
       {selectedRequest && (

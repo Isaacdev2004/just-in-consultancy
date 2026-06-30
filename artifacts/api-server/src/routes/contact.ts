@@ -30,4 +30,16 @@ router.post("/contact", async (req, res) => {
   return res.status(201).json({ message: "Message sent successfully" });
 });
 
+export function formatContactMessage(m: typeof contactMessagesTable.$inferSelect) {
+  return {
+    id: m.id,
+    name: m.name,
+    email: m.email,
+    phone: m.phone,
+    subject: m.subject,
+    message: m.message,
+    createdAt: m.createdAt.toISOString(),
+  };
+}
+
 export default router;

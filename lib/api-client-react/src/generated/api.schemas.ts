@@ -109,6 +109,17 @@ export interface AdminAuthResult {
   admin: AdminUser;
 }
 
+export interface ContactMessage {
+  id: number;
+  name: string;
+  email: string;
+  /** @nullable */
+  phone?: string | null;
+  subject: string;
+  message: string;
+  createdAt: string;
+}
+
 export interface CategoryCount {
   category: string;
   count: number;
@@ -125,7 +136,9 @@ export interface AnalyticsData {
   inProgressRequests: number;
   completedRequests: number;
   cancelledRequests: number;
+  totalContactMessages: number;
   recentRequests: ServiceRequest[];
+  recentContactMessages: ContactMessage[];
   requestsByCategory: CategoryCount[];
   requestsByMonth: MonthlyCount[];
 }
@@ -137,6 +150,14 @@ export interface ContactInput {
   phone?: string | null;
   subject: string;
   message: string;
+}
+
+export interface ContactMessageList {
+  messages: ContactMessage[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
 }
 
 export interface ExportResponse {
@@ -174,4 +195,10 @@ export const ExportAdminRequestsStatus = {
   completed: 'completed',
   cancelled: 'cancelled',
 } as const;
+
+export type ListAdminMessagesParams = {
+search?: string;
+page?: number;
+limit?: number;
+};
 

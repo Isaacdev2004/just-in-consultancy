@@ -6,6 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { CategoryCount } from './categoryCount';
+import type { ContactMessage } from './contactMessage';
 import type { MonthlyCount } from './monthlyCount';
 import type { ServiceRequest } from './serviceRequest';
 
@@ -15,7 +16,9 @@ export interface AnalyticsData {
   inProgressRequests: number;
   completedRequests: number;
   cancelledRequests: number;
+  totalContactMessages: number;
   recentRequests: ServiceRequest[];
+  recentContactMessages: ContactMessage[];
   requestsByCategory: CategoryCount[];
   requestsByMonth: MonthlyCount[];
 }

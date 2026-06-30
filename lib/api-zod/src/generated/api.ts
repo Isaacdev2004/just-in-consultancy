@@ -246,6 +246,65 @@ export const ExportAdminRequestsResponse = zod.object({
 
 
 /**
+ * @summary List contact form messages (admin)
+ */
+export const listAdminMessagesQueryPageDefault = 1;
+export const listAdminMessagesQueryLimitDefault = 20;
+
+export const ListAdminMessagesQueryParams = zod.object({
+  "search": zod.coerce.string().optional(),
+  "page": zod.coerce.number().default(listAdminMessagesQueryPageDefault),
+  "limit": zod.coerce.number().default(listAdminMessagesQueryLimitDefault)
+})
+
+export const ListAdminMessagesResponse = zod.object({
+  "messages": zod.array(zod.object({
+  "id": zod.number(),
+  "name": zod.string(),
+  "email": zod.string(),
+  "phone": zod.string().nullish(),
+  "subject": zod.string(),
+  "message": zod.string(),
+  "createdAt": zod.string()
+})),
+  "total": zod.number(),
+  "page": zod.number(),
+  "limit": zod.number(),
+  "totalPages": zod.number()
+})
+
+
+/**
+ * @summary Get a specific contact message (admin)
+ */
+export const GetAdminMessageParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const GetAdminMessageResponse = zod.object({
+  "id": zod.number(),
+  "name": zod.string(),
+  "email": zod.string(),
+  "phone": zod.string().nullish(),
+  "subject": zod.string(),
+  "message": zod.string(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Delete a contact message (admin)
+ */
+export const DeleteAdminMessageParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const DeleteAdminMessageResponse = zod.object({
+  "message": zod.string()
+})
+
+
+/**
  * @summary Get dashboard analytics
  */
 export const GetAnalyticsResponse = zod.object({
@@ -254,6 +313,7 @@ export const GetAnalyticsResponse = zod.object({
   "inProgressRequests": zod.number(),
   "completedRequests": zod.number(),
   "cancelledRequests": zod.number(),
+  "totalContactMessages": zod.number(),
   "recentRequests": zod.array(zod.object({
   "id": zod.number(),
   "requestId": zod.string(),
@@ -274,6 +334,15 @@ export const GetAnalyticsResponse = zod.object({
   "adminNotes": zod.string().nullish(),
   "createdAt": zod.string(),
   "updatedAt": zod.string()
+})),
+  "recentContactMessages": zod.array(zod.object({
+  "id": zod.number(),
+  "name": zod.string(),
+  "email": zod.string(),
+  "phone": zod.string().nullish(),
+  "subject": zod.string(),
+  "message": zod.string(),
+  "createdAt": zod.string()
 })),
   "requestsByCategory": zod.array(zod.object({
   "category": zod.string(),
