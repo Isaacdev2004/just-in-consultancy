@@ -59,8 +59,13 @@ export default function AdminLogin() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center items-center p-4">
-      <Card className="w-full max-w-md">
+    <div className="min-h-screen bg-secondary flex flex-col justify-center items-center p-4">
+      <img
+        src="/logo.png"
+        alt="Just-In-Time Consultancy LLC"
+        className="h-14 w-auto object-contain mb-8"
+      />
+      <Card className="w-full max-w-md border-border">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl text-primary">Admin Portal</CardTitle>
           <CardDescription>Sign in to manage procurement requests</CardDescription>

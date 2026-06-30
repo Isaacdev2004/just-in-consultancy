@@ -120,7 +120,7 @@ export default function AdminDashboard() {
 
   if (isLoadingAuth) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-secondary flex items-center justify-center">
         <div className="text-center">
           <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4" />
           <p className="text-muted-foreground text-sm">Verifying session...</p>
@@ -197,12 +197,12 @@ export default function AdminDashboard() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="min-h-screen bg-secondary flex">
       {/* Sidebar */}
       <aside className="w-64 bg-primary text-primary-foreground flex flex-col shrink-0">
         <div className="p-6 border-b border-white/10">
-          <h2 className="text-base font-extrabold tracking-tight">Just-In-Time</h2>
-          <p className="text-xs text-white/40 mt-1">Admin Portal</p>
+          <img src="/logo.png" alt="Just-In-Time Consultancy LLC" className="h-12 w-auto object-contain bg-white rounded-lg p-1.5 mb-2" />
+          <p className="text-xs text-white/60">Admin Portal</p>
         </div>
         <nav className="flex-1 p-4 space-y-1">
           {(["overview", "requests"] as Tab[]).map((tab) => (
@@ -210,7 +210,7 @@ export default function AdminDashboard() {
               key={tab}
               onClick={() => setActiveTab(tab)}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors text-left capitalize ${
-                activeTab === tab ? "bg-accent text-white" : "text-white/60 hover:bg-white/10 hover:text-white"
+                activeTab === tab ? "bg-accent text-accent-foreground" : "text-white/60 hover:bg-white/10 hover:text-white"
               }`}
             >
               {tab === "overview" ? (
@@ -415,7 +415,7 @@ export default function AdminDashboard() {
                           <TableCell colSpan={8} className="text-center py-12 text-muted-foreground">No requests found</TableCell>
                         </TableRow>
                       ) : requestsData?.requests.map((r) => (
-                        <TableRow key={r.id} className="hover:bg-gray-50/50">
+                        <TableRow key={r.id} className="hover:bg-secondary/80">
                           <TableCell className="font-mono text-xs font-medium text-primary">{r.requestId}</TableCell>
                           <TableCell className="font-medium max-w-[120px] truncate">{r.companyName}</TableCell>
                           <TableCell className="text-muted-foreground max-w-[120px] truncate">{r.productName}</TableCell>
@@ -469,7 +469,7 @@ export default function AdminDashboard() {
               </DialogTitle>
             </DialogHeader>
             <div className="space-y-4 text-sm">
-              <div className="grid grid-cols-2 gap-4 p-4 bg-gray-50 rounded-lg">
+              <div className="grid grid-cols-2 gap-4 p-4 bg-secondary rounded-lg">
                 {[
                   ["Company", "companyName"], ["Contact", "contactPerson"], ["Email", "email"],
                   ["Phone", "phone"], ["Country", "country"], ["Product", "productName"],
@@ -483,13 +483,13 @@ export default function AdminDashboard() {
                 ))}
               </div>
               {Boolean(selectedRequest.description) && (
-                <div className="p-4 bg-gray-50 rounded-lg">
+                <div className="p-4 bg-secondary rounded-lg">
                   <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1">Description</p>
                   <p className="text-foreground leading-relaxed">{String(selectedRequest.description)}</p>
                 </div>
               )}
               {Boolean(selectedRequest.additionalNotes) && (
-                <div className="p-4 bg-gray-50 rounded-lg">
+                <div className="p-4 bg-secondary rounded-lg">
                   <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1">Additional Notes</p>
                   <p className="text-foreground leading-relaxed">{String(selectedRequest.additionalNotes)}</p>
                 </div>

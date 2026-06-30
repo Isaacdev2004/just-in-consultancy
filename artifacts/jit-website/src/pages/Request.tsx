@@ -86,8 +86,8 @@ export default function Request() {
 
   if (requestId) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-        <div className="max-w-md w-full bg-white rounded-xl shadow-lg p-8 text-center border border-border">
+      <div className="min-h-screen bg-secondary flex items-center justify-center p-4">
+        <div className="max-w-md w-full bg-card rounded-xl shadow-lg p-8 text-center border border-border">
           <div className="w-16 h-16 bg-accent/10 text-accent rounded-full flex items-center justify-center mx-auto mb-6">
             <svg
               className="w-8 h-8"
@@ -122,17 +122,19 @@ export default function Request() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4">
+    <div className="min-h-screen bg-secondary py-12 px-4">
       <div className="max-w-3xl mx-auto">
-        <Button
-          variant="ghost"
-          onClick={() => setLocation("/")}
-          className="mb-8"
-        >
-          &larr; Back to Home
-        </Button>
+        <div className="flex items-center justify-between mb-8">
+          <img src="/logo.png" alt="Just-In-Time Consultancy LLC" className="h-12 w-auto object-contain" />
+          <Button
+            variant="ghost"
+            onClick={() => setLocation("/")}
+          >
+            &larr; Back to Home
+          </Button>
+        </div>
 
-        <div className="bg-white rounded-xl shadow-sm border border-border p-6 md:p-8">
+        <div className="bg-card rounded-xl shadow-sm border border-border p-6 md:p-8">
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-primary">
               Procurement Request

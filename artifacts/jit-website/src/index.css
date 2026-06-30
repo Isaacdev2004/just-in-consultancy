@@ -61,52 +61,53 @@
 }
 
 :root {
-  --background: 0 0% 100%;
-  --foreground: 226 70% 10%;
-  --border: 210 17% 90%;
-  
-  --card: 0 0% 100%;
-  --card-foreground: 226 70% 10%;
-  --card-border: 210 17% 90%;
+  /* Brand: navy #1A365D + gold #D4AF37 */
+  --background: 43 38% 98%;
+  --foreground: 214 56% 16%;
+  --border: 43 22% 88%;
 
-  --sidebar: 226 70% 17%;
+  --card: 0 0% 100%;
+  --card-foreground: 214 56% 16%;
+  --card-border: 43 22% 88%;
+
+  --sidebar: 214 56% 23%;
   --sidebar-foreground: 0 0% 100%;
-  --sidebar-border: 226 70% 15%;
-  --sidebar-primary: 161 94% 30%;
-  --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 226 70% 25%;
+  --sidebar-border: 214 56% 20%;
+  --sidebar-primary: 46 66% 52%;
+  --sidebar-primary-foreground: 214 56% 16%;
+  --sidebar-accent: 214 45% 30%;
   --sidebar-accent-foreground: 0 0% 100%;
-  --sidebar-ring: 161 94% 30%;
+  --sidebar-ring: 46 66% 52%;
 
   --popover: 0 0% 100%;
-  --popover-foreground: 226 70% 10%;
-  --popover-border: 210 17% 90%;
+  --popover-foreground: 214 56% 16%;
+  --popover-border: 43 22% 88%;
 
-  --primary: 226 70% 17%;
+  --primary: 214 56% 23%;
   --primary-foreground: 0 0% 100%;
-  
-  --secondary: 210 17% 98%;
-  --secondary-foreground: 226 70% 17%;
 
-  --muted: 210 17% 96%;
-  --muted-foreground: 215 16% 47%;
+  --secondary: 43 45% 94%;
+  --secondary-foreground: 214 56% 23%;
 
-  --accent: 161 94% 30%;
-  --accent-foreground: 0 0% 100%;
+  --muted: 214 25% 93%;
+  --muted-foreground: 214 20% 40%;
+
+  --accent: 46 66% 52%;
+  --accent-foreground: 214 56% 16%;
 
   --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 100%;
 
-  --input: 210 17% 90%;
-  --ring: 161 94% 30%;
+  --input: 43 22% 88%;
+  --ring: 46 66% 52%;
 
   --radius: 0.5rem;
 
-  --chart-1: 226 70% 17%;
-  --chart-2: 161 94% 30%;
-  --chart-3: 210 17% 90%;
-  --chart-4: 215 16% 47%;
-  --chart-5: 226 70% 25%;
+  --chart-1: 214 56% 23%;
+  --chart-2: 46 66% 52%;
+  --chart-3: 43 45% 88%;
+  --chart-4: 214 20% 40%;
+  --chart-5: 214 45% 35%;
 }
 
 @layer base {

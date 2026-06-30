@@ -158,33 +158,36 @@ export default function Home() {
   ];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-background">
       {/* Navbar */}
-      <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled ? "bg-white/95 backdrop-blur-md shadow-sm border-b border-border" : "bg-transparent"}`}>
+      <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled ? "bg-white/98 backdrop-blur-md shadow-sm border-b border-border" : "bg-white/95 backdrop-blur-md shadow-sm"}`}>
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-          <div className="flex flex-col">
-            <span className={`text-lg font-extrabold tracking-tight leading-tight transition-colors duration-300 ${scrolled ? "text-primary" : "text-white"}`}>Just-In-Time Consultancy</span>
-            <span className="text-[11px] text-accent font-medium hidden md:block tracking-wide">Efficient Research & Smart Procurement Solutions</span>
-          </div>
+          <Link href="/" className="flex items-center shrink-0">
+            <img
+              src="/logo.png"
+              alt="Just-In-Time Consultancy LLC"
+              className="h-12 md:h-14 w-auto object-contain"
+            />
+          </Link>
           <div className="hidden lg:flex items-center gap-8">
             {[["About", "about"], ["Services", "services"], ["Process", "process"], ["Industries", "industries"], ["Contact", "contact"]].map(([label, id]) => (
-              <a key={id} href={`#${id}`} className={`text-sm font-medium transition-colors duration-200 ${scrolled ? "text-foreground/60 hover:text-primary" : "text-white/60 hover:text-white"}`}>{label}</a>
+              <a key={id} href={`#${id}`} className="text-sm font-medium text-foreground/60 hover:text-primary transition-colors duration-200">{label}</a>
             ))}
           </div>
-          <Button onClick={() => setLocation("/request")} className="bg-accent hover:bg-accent/90 text-white font-semibold shadow-lg shadow-accent/20">
+          <Button onClick={() => setLocation("/request")} className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold shadow-lg shadow-accent/25">
             Request a Service
           </Button>
         </div>
       </nav>
 
       {/* Hero */}
-      <section className="min-h-screen flex flex-col relative overflow-hidden" style={{ background: "linear-gradient(135deg, #0a1628 0%, #0d1f3c 40%, #091525 100%)" }}>
+      <section className="min-h-screen flex flex-col relative overflow-hidden" style={{ background: "linear-gradient(135deg, #1A365D 0%, #152e4f 40%, #0f2340 100%)" }}>
         {/* Background layers */}
         <div className="absolute inset-0">
           {/* Noise texture overlay */}
           <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E\")", backgroundRepeat: "repeat", backgroundSize: "128px" }} />
           {/* Radial accent glow left */}
-          <div className="absolute -top-40 -left-40 w-[600px] h-[600px] rounded-full opacity-20" style={{ background: "radial-gradient(circle, hsl(161,94%,30%) 0%, transparent 70%)" }} />
+          <div className="absolute -top-40 -left-40 w-[600px] h-[600px] rounded-full opacity-20" style={{ background: "radial-gradient(circle, hsl(46,66%,52%) 0%, transparent 70%)" }} />
           {/* Radial deep blue glow right */}
           <div className="absolute -bottom-60 -right-20 w-[700px] h-[700px] rounded-full opacity-15" style={{ background: "radial-gradient(circle, #1a4a9a 0%, transparent 70%)" }} />
           {/* Subtle horizontal line grid */}
@@ -210,7 +213,7 @@ export default function Home() {
                 We Research.<br />
                 We{" "}
                 <span className="relative inline-block">
-                  <span style={{ WebkitTextStroke: "2px hsl(161,94%,30%)", color: "transparent" }}>Source.</span>
+                  <span style={{ WebkitTextStroke: "2px hsl(46,66%,52%)", color: "transparent" }}>Source.</span>
                   <span className="absolute inset-0 text-accent" style={{ clipPath: "inset(0 60% 0 0)", transition: "clip-path 1.5s ease" }}>Source.</span>
                 </span>
                 <br />
@@ -228,7 +231,7 @@ export default function Home() {
                 className="flex flex-col sm:flex-row gap-3 mb-12">
                 <button onClick={() => setLocation("/request")}
                   className="group relative inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl font-bold text-base text-white overflow-hidden transition-all duration-300"
-                  style={{ background: "linear-gradient(135deg, hsl(161,94%,25%) 0%, hsl(161,94%,35%) 100%)", boxShadow: "0 0 40px rgba(0,166,90,0.3), 0 4px 15px rgba(0,0,0,0.3)" }}>
+                  style={{ background: "linear-gradient(135deg, hsl(46,66%,45%) 0%, hsl(46,66%,58%) 100%)", boxShadow: "0 0 40px rgba(212,175,55,0.3), 0 4px 15px rgba(0,0,0,0.3)" }}>
                   <span className="relative z-10">Request a Service</span>
                   <svg className="w-4 h-4 relative z-10 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
                   <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -274,16 +277,16 @@ export default function Home() {
 
                 {/* Globe SVG */}
                 <div className="absolute inset-12 rounded-full overflow-hidden"
-                  style={{ background: "radial-gradient(ellipse at 35% 35%, #1a3a7a 0%, #0a1628 60%, #040d1a 100%)", boxShadow: "0 0 80px rgba(0,166,90,0.15), inset 0 0 60px rgba(0,0,0,0.5), 0 20px 60px rgba(0,0,0,0.5)" }}>
+                  style={{ background: "radial-gradient(ellipse at 35% 35%, #2a5080 0%, #1A365D 60%, #0f2340 100%)", boxShadow: "0 0 80px rgba(212,175,55,0.15), inset 0 0 60px rgba(0,0,0,0.5), 0 20px 60px rgba(0,0,0,0.5)" }}>
                   {/* Globe lines */}
                   <svg viewBox="0 0 280 280" className="w-full h-full opacity-25">
                     {/* Latitude lines */}
                     {[40, 70, 100, 130, 160, 190, 220, 250].map((y) => (
-                      <ellipse key={y} cx="140" cy={y} rx={Math.sqrt(Math.max(0, 140*140 - (y-140)*(y-140)))} ry="8" fill="none" stroke="hsl(161,94%,50%)" strokeWidth="0.7"/>
+                      <ellipse key={y} cx="140" cy={y} rx={Math.sqrt(Math.max(0, 140*140 - (y-140)*(y-140)))} ry="8" fill="none" stroke="hsl(46,66%,62%)" strokeWidth="0.7"/>
                     ))}
                     {/* Longitude lines */}
                     {[0, 30, 60, 90, 120, 150].map((angle) => (
-                      <ellipse key={angle} cx="140" cy="140" rx={angle % 90 === 0 ? 100 : 50} ry="100" fill="none" stroke="hsl(161,94%,50%)" strokeWidth="0.7" transform={`rotate(${angle} 140 140)`}/>
+                      <ellipse key={angle} cx="140" cy="140" rx={angle % 90 === 0 ? 100 : 50} ry="100" fill="none" stroke="hsl(46,66%,62%)" strokeWidth="0.7" transform={`rotate(${angle} 140 140)`}/>
                     ))}
                   </svg>
                   {/* Gloss */}
@@ -303,7 +306,7 @@ export default function Home() {
                     animate={{ scale: [1, 1.4, 1], opacity: [0.7, 1, 0.7] }}
                     transition={{ duration: 2.5, repeat: Infinity, delay }}>
                     <div className="relative w-3 h-3">
-                      <div className="w-3 h-3 rounded-full bg-accent" style={{ boxShadow: "0 0 8px hsl(161,94%,30%)" }} />
+                      <div className="w-3 h-3 rounded-full bg-accent" style={{ boxShadow: "0 0 8px hsl(46,66%,52%)" }} />
                       <motion.div className="absolute inset-0 rounded-full border border-accent"
                         animate={{ scale: [1, 2.5], opacity: [0.6, 0] }}
                         transition={{ duration: 2, repeat: Infinity, delay }} />
@@ -313,13 +316,13 @@ export default function Home() {
 
                 {/* Connection lines SVG overlay */}
                 <svg className="absolute inset-0 w-full h-full" viewBox="0 0 420 420" style={{ zIndex: 15 }}>
-                  <motion.path d="M 118 92 Q 210 150 302 159" fill="none" stroke="hsl(161,94%,50%)" strokeWidth="0.8" strokeDasharray="4 3"
+                  <motion.path d="M 118 92 Q 210 150 302 159" fill="none" stroke="hsl(46,66%,62%)" strokeWidth="0.8" strokeDasharray="4 3"
                     initial={{ pathLength: 0, opacity: 0 }} animate={{ pathLength: 1, opacity: [0, 0.5, 0.5, 0] }}
                     transition={{ duration: 3, repeat: Infinity, delay: 0 }} />
-                  <motion.path d="M 302 159 Q 280 220 147 252" fill="none" stroke="hsl(161,94%,50%)" strokeWidth="0.8" strokeDasharray="4 3"
+                  <motion.path d="M 302 159 Q 280 220 147 252" fill="none" stroke="hsl(46,66%,62%)" strokeWidth="0.8" strokeDasharray="4 3"
                     initial={{ pathLength: 0, opacity: 0 }} animate={{ pathLength: 1, opacity: [0, 0.5, 0.5, 0] }}
                     transition={{ duration: 3, repeat: Infinity, delay: 1 }} />
-                  <motion.path d="M 118 92 Q 160 200 210 273" fill="none" stroke="hsl(161,94%,50%)" strokeWidth="0.8" strokeDasharray="4 3"
+                  <motion.path d="M 118 92 Q 160 200 210 273" fill="none" stroke="hsl(46,66%,62%)" strokeWidth="0.8" strokeDasharray="4 3"
                     initial={{ pathLength: 0, opacity: 0 }} animate={{ pathLength: 1, opacity: [0, 0.5, 0.5, 0] }}
                     transition={{ duration: 3, repeat: Infinity, delay: 2 }} />
                 </svg>
@@ -408,7 +411,7 @@ export default function Home() {
       </section>
 
       {/* About */}
-      <section id="about" className="py-24 bg-white">
+      <section id="about" className="py-24 bg-background">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} transition={{ duration: 0.6 }}>
@@ -461,7 +464,7 @@ export default function Home() {
       </section>
 
       {/* Services */}
-      <section id="services" className="py-24 bg-gray-50">
+      <section id="services" className="py-24 bg-secondary">
         <div className="max-w-7xl mx-auto px-6">
           <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="text-center mb-16">
             <span className="text-accent font-semibold text-sm tracking-widest uppercase">What We Do</span>
@@ -471,7 +474,7 @@ export default function Home() {
           <motion.div variants={stagger} initial="hidden" whileInView="visible" viewport={{ once: true }} className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {services.map((service, i) => (
               <motion.div key={service.name} variants={fadeUp} transition={{ duration: 0.5 }}>
-                <Card className="h-full group hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-border hover:border-accent/30 cursor-default bg-white">
+                <Card className="h-full group hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-border hover:border-accent/40 cursor-default bg-card">
                   <CardHeader>
                     <div className="w-12 h-12 rounded-xl bg-primary/5 flex items-center justify-center mb-4 group-hover:bg-accent transition-colors duration-300">
                       <svg className="w-6 h-6 text-primary group-hover:text-white transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -491,7 +494,7 @@ export default function Home() {
       </section>
 
       {/* Why Choose Us */}
-      <section className="py-24 bg-white">
+      <section className="py-24 bg-background">
         <div className="max-w-7xl mx-auto px-6">
           <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="text-center mb-16">
             <span className="text-accent font-semibold text-sm tracking-widest uppercase">Why Choose Us</span>
@@ -501,7 +504,7 @@ export default function Home() {
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {whyChooseUs.map(({ title, desc }, i) => (
               <motion.div key={title} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.08 }}
-                className="p-6 rounded-2xl bg-gray-50 hover:bg-primary hover:text-white transition-all duration-300 group cursor-default">
+                className="p-6 rounded-2xl bg-secondary hover:bg-primary hover:text-white transition-all duration-300 group cursor-default">
                 <div className="w-8 h-8 rounded-lg bg-accent/10 group-hover:bg-accent/20 flex items-center justify-center mb-4">
                   <span className="text-accent text-sm font-bold">{String(i + 1).padStart(2, "0")}</span>
                 </div>
@@ -524,7 +527,7 @@ export default function Home() {
           <div className="grid md:grid-cols-7 gap-4">
             {processSteps.map(({ step, title, desc }, i) => (
               <motion.div key={step} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
-                className={`relative cursor-pointer rounded-2xl p-5 transition-all duration-300 ${activeStep === i ? "bg-accent text-white shadow-xl shadow-accent/30" : "bg-white/5 hover:bg-white/10 text-white"}`}
+                className={`relative cursor-pointer rounded-2xl p-5 transition-all duration-300 ${activeStep === i ? "bg-accent text-accent-foreground shadow-xl shadow-accent/30" : "bg-white/5 hover:bg-white/10 text-white"}`}
                 onClick={() => setActiveStep(i)}>
                 {i < processSteps.length - 1 && (
                   <div className="hidden md:block absolute top-8 -right-2 w-4 z-10">
@@ -547,7 +550,7 @@ export default function Home() {
       </section>
 
       {/* Industries */}
-      <section id="industries" className="py-24 bg-white">
+      <section id="industries" className="py-24 bg-background">
         <div className="max-w-7xl mx-auto px-6">
           <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="text-center mb-16">
             <span className="text-accent font-semibold text-sm tracking-widest uppercase">Industries Served</span>
@@ -557,7 +560,7 @@ export default function Home() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {industries.map(({ name, icon }, i) => (
               <motion.div key={name} initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }}
-                className="group flex flex-col items-center gap-4 p-8 rounded-2xl bg-gray-50 hover:bg-primary hover:shadow-lg transition-all duration-300 cursor-default">
+                className="group flex flex-col items-center gap-4 p-8 rounded-2xl bg-secondary hover:bg-primary hover:shadow-lg transition-all duration-300 cursor-default">
                 <div className="w-14 h-14 rounded-2xl bg-primary/5 group-hover:bg-white/10 flex items-center justify-center transition-colors">
                   <svg className="w-7 h-7 text-primary group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d={icon} />
@@ -593,7 +596,7 @@ export default function Home() {
       </section>
 
       {/* Testimonials */}
-      <section className="py-24 bg-gray-50">
+      <section className="py-24 bg-secondary">
         <div className="max-w-7xl mx-auto px-6">
           <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="text-center mb-16">
             <span className="text-accent font-semibold text-sm tracking-widest uppercase">Client Stories</span>
@@ -602,7 +605,7 @@ export default function Home() {
           <div className="grid md:grid-cols-2 gap-6">
             {testimonials.map(({ name, company, role, text }, i) => (
               <motion.div key={name} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
-                <Card className="h-full bg-white border-border hover:shadow-lg transition-shadow duration-300">
+                <Card className="h-full bg-card border-border hover:shadow-lg transition-shadow duration-300">
                   <CardContent className="p-8">
                     <div className="flex gap-1 mb-4">
                       {Array.from({ length: 5 }).map((_, j) => (
@@ -630,7 +633,7 @@ export default function Home() {
       </section>
 
       {/* FAQ */}
-      <section className="py-24 bg-white">
+      <section className="py-24 bg-background">
         <div className="max-w-4xl mx-auto px-6">
           <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="text-center mb-16">
             <span className="text-accent font-semibold text-sm tracking-widest uppercase">FAQ</span>
@@ -649,7 +652,7 @@ export default function Home() {
       </section>
 
       {/* Contact */}
-      <section id="contact" className="py-24 bg-gray-50">
+      <section id="contact" className="py-24 bg-secondary">
         <div className="max-w-7xl mx-auto px-6">
           <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="text-center mb-16">
             <span className="text-accent font-semibold text-sm tracking-widest uppercase">Contact Us</span>
@@ -663,7 +666,7 @@ export default function Home() {
                 { label: "Support", value: "support@justintimeconsultancy.com", icon: "M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" },
                 { label: "Business Hours", value: "Mon – Fri: 8:00 AM – 6:00 PM (GMT)", icon: "M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" },
               ].map(({ label, value, icon }) => (
-                <div key={label} className="flex gap-4 p-5 rounded-xl bg-white border border-border">
+                <div key={label} className="flex gap-4 p-5 rounded-xl bg-card border border-border">
                   <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center shrink-0">
                     <svg className="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d={icon} />
@@ -677,7 +680,7 @@ export default function Home() {
               ))}
             </div>
             <div className="lg:col-span-2">
-              <Card className="bg-white border-border shadow-sm">
+              <Card className="bg-card border-border shadow-sm">
                 <CardContent className="p-8">
                   <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
@@ -720,7 +723,7 @@ export default function Home() {
                           <FormMessage />
                         </FormItem>
                       )}/>
-                      <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-white font-semibold py-6 text-base" disabled={contactMutation.isPending}>
+                      <Button type="submit" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-semibold py-6 text-base" disabled={contactMutation.isPending}>
                         {contactMutation.isPending ? "Sending..." : "Send Message"}
                       </Button>
                     </form>
@@ -737,8 +740,11 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid md:grid-cols-4 gap-10 mb-12">
             <div className="md:col-span-2">
-              <h3 className="text-xl font-extrabold mb-2">Just-In-Time Consultancy</h3>
-              <p className="text-accent text-sm font-medium mb-4">Efficient Research & Smart Procurement Solutions</p>
+              <img
+                src="/logo.png"
+                alt="Just-In-Time Consultancy LLC"
+                className="h-16 w-auto object-contain mb-4 bg-white rounded-lg p-2"
+              />
               <p className="text-primary-foreground/60 text-sm leading-relaxed max-w-xs">
                 Empowering businesses through precision procurement, global sourcing, and supply chain excellence.
               </p>
