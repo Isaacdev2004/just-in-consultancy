@@ -1,3 +1,3 @@
-- [API dev mode tsx](api-dev-tsx.md) — use tsx (not build+start) for api-server dev to avoid EADDRINUSE on workflow restarts
+- [API dev mode tsx](api-dev-tsx.md) — use tsx (not build+start) for api-server dev to avoid EADDRINUSE on restarts
 - [Express 5 param types](express5-param-types.md) — req.params.id is string|string[] in Express 5; always cast with String()
-- [Port kill via proc](port-kill-proc.md) — fuser/lsof/ss unavailable; kill stuck ports via /proc/net/tcp inode lookup
+- [Port kill via proc](port-kill-proc.md) — kill stuck ports via /proc/net/tcp inode lookup when fuser/lsof/ss are unavailable

@@ -55,18 +55,9 @@ A premium full-stack business website for a global procurement consultancy, with
 
 **Admin portal**: Protected at `/admin` (login) and `/admin/dashboard`. Overview tab shows 5 stat cards + BarChart by category + LineChart monthly trend + recent requests. Requests tab shows searchable/filterable table with pagination, edit modal (status + notes), delete, and CSV export.
 
-## User preferences
-
-_Populate as you build — explicit user instructions worth remembering across sessions._
-
 ## Gotchas
 
-- **tsx for API dev**: The `dev` script uses `tsx` (not build+start) to avoid port EADDRINUSE on workflow restarts. Never revert to build+start for dev.
-- **Port 8080 after crashes**: If port 8080 is stuck after a crash, find and kill via `/proc/net/tcp` inode lookup (fuser/lsof/ss/netstat are not available in this environment).
+- **tsx for API dev**: The `dev` script uses `tsx` (not build+start) to avoid port EADDRINUSE on restarts. Never revert to build+start for dev.
 - **Admin credentials**: username=`admin`, password=`admin123`. Re-run `pnpm --filter @workspace/scripts run seed-admin` to reset.
 - **zod import**: Use `"zod"` (not `"zod/v4"`) in server route files.
 - **Express 5 params types**: `req.params.id` is typed as `string | string[]` — always cast with `String(req.params.id)`.
-
-## Pointers
-
-- See the `pnpm-workspace` skill for workspace structure, TypeScript setup, and package details
