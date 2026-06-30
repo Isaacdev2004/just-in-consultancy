@@ -63,6 +63,13 @@ const stagger = {
   visible: { transition: { staggerChildren: 0.1 } },
 };
 
+const sourcingShowcase = [
+  { src: "/images/sourcing-machinery.png", title: "Heavy Equipment", desc: "Construction & industrial machinery from verified global manufacturers." },
+  { src: "/images/sourcing-vacuum.png", title: "Commercial Equipment", desc: "Facility management and professional cleaning systems." },
+  { src: "/images/sourcing-cleaning.png", title: "Specialty Systems", desc: "Professional-grade maintenance and extraction solutions." },
+  { src: "/images/sourcing-vehicle.png", title: "Fleet & Logistics", desc: "Commercial vehicles and fleet procurement worldwide." },
+];
+
 export default function Home() {
   const [scrolled, setScrolled] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
@@ -170,7 +177,7 @@ export default function Home() {
             />
           </Link>
           <div className="hidden lg:flex items-center gap-8">
-            {[["About", "about"], ["Services", "services"], ["Process", "process"], ["Industries", "industries"], ["Contact", "contact"]].map(([label, id]) => (
+            {[["About", "about"], ["Sourcing", "sourcing"], ["Services", "services"], ["Process", "process"], ["Industries", "industries"], ["Contact", "contact"]].map(([label, id]) => (
               <a key={id} href={`#${id}`} className="text-sm font-medium text-foreground/60 hover:text-primary transition-colors duration-200">{label}</a>
             ))}
           </div>
@@ -184,6 +191,14 @@ export default function Home() {
       <section className="min-h-screen flex flex-col relative overflow-hidden" style={{ background: "linear-gradient(135deg, #1A365D 0%, #152e4f 40%, #0f2340 100%)" }}>
         {/* Background layers */}
         <div className="absolute inset-0">
+          {/* Hero background photo */}
+          <img
+            src="/images/sourcing-machinery.png"
+            alt=""
+            aria-hidden
+            className="absolute inset-0 w-full h-full object-cover opacity-[0.12] mix-blend-luminosity"
+          />
+          <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, rgba(26,54,93,0.92) 0%, rgba(21,46,79,0.88) 45%, rgba(15,35,64,0.95) 100%)" }} />
           {/* Noise texture overlay */}
           <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E\")", backgroundRepeat: "repeat", backgroundSize: "128px" }} />
           {/* Radial accent glow left */}
@@ -261,121 +276,52 @@ export default function Home() {
               </motion.div>
             </div>
 
-            {/* Right — Visual: Global Network */}
-            <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8, delay: 0.2 }}
-              className="relative hidden lg:flex items-center justify-center">
-
-              {/* Central sphere */}
-              <div className="relative w-[420px] h-[420px]">
-                {/* Outer rotating ring */}
-                <motion.div animate={{ rotate: 360 }} transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
-                  className="absolute inset-0 rounded-full border border-accent/15"
-                  style={{ borderStyle: "dashed" }} />
-                <motion.div animate={{ rotate: -360 }} transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                  className="absolute inset-8 rounded-full border border-white/8"
-                  style={{ borderStyle: "dashed" }} />
-
-                {/* Globe SVG */}
-                <div className="absolute inset-12 rounded-full overflow-hidden"
-                  style={{ background: "radial-gradient(ellipse at 35% 35%, #2a5080 0%, #1A365D 60%, #0f2340 100%)", boxShadow: "0 0 80px rgba(212,175,55,0.15), inset 0 0 60px rgba(0,0,0,0.5), 0 20px 60px rgba(0,0,0,0.5)" }}>
-                  {/* Globe lines */}
-                  <svg viewBox="0 0 280 280" className="w-full h-full opacity-25">
-                    {/* Latitude lines */}
-                    {[40, 70, 100, 130, 160, 190, 220, 250].map((y) => (
-                      <ellipse key={y} cx="140" cy={y} rx={Math.sqrt(Math.max(0, 140*140 - (y-140)*(y-140)))} ry="8" fill="none" stroke="hsl(46,66%,62%)" strokeWidth="0.7"/>
-                    ))}
-                    {/* Longitude lines */}
-                    {[0, 30, 60, 90, 120, 150].map((angle) => (
-                      <ellipse key={angle} cx="140" cy="140" rx={angle % 90 === 0 ? 100 : 50} ry="100" fill="none" stroke="hsl(46,66%,62%)" strokeWidth="0.7" transform={`rotate(${angle} 140 140)`}/>
-                    ))}
-                  </svg>
-                  {/* Gloss */}
-                  <div className="absolute top-4 left-6 w-20 h-12 rounded-full opacity-20" style={{ background: "radial-gradient(ellipse, white, transparent)" }} />
-                </div>
-
-                {/* Pulsing dots on globe */}
-                {[
-                  { top: "22%", left: "28%", delay: 0 },
-                  { top: "38%", left: "72%", delay: 0.4 },
-                  { top: "60%", left: "35%", delay: 0.8 },
-                  { top: "55%", left: "65%", delay: 1.2 },
-                  { top: "30%", left: "52%", delay: 0.6 },
-                  { top: "70%", left: "50%", delay: 1.0 },
-                ].map(({ top, left, delay }, i) => (
-                  <motion.div key={i} className="absolute z-20" style={{ top, left }}
-                    animate={{ scale: [1, 1.4, 1], opacity: [0.7, 1, 0.7] }}
-                    transition={{ duration: 2.5, repeat: Infinity, delay }}>
-                    <div className="relative w-3 h-3">
-                      <div className="w-3 h-3 rounded-full bg-accent" style={{ boxShadow: "0 0 8px hsl(46,66%,52%)" }} />
-                      <motion.div className="absolute inset-0 rounded-full border border-accent"
-                        animate={{ scale: [1, 2.5], opacity: [0.6, 0] }}
-                        transition={{ duration: 2, repeat: Infinity, delay }} />
+            {/* Right — Photo collage */}
+            <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8, delay: 0.2 }}
+              className="relative hidden lg:block">
+              <div className="grid grid-cols-2 gap-3 p-2">
+                {sourcingShowcase.map(({ src, title }, i) => (
+                  <motion.div
+                    key={title}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.3 + i * 0.1 }}
+                    className={`relative overflow-hidden rounded-2xl group ${i === 0 ? "col-span-2 h-44" : "h-36"}`}
+                    style={{ boxShadow: "0 12px 40px rgba(0,0,0,0.45)" }}>
+                    <img src={src} alt={title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/20 to-transparent" />
+                    <div className="absolute bottom-0 left-0 right-0 p-4">
+                      <p className="text-white text-sm font-bold">{title}</p>
                     </div>
+                    <div className="absolute top-3 right-3 w-2 h-2 rounded-full bg-accent animate-pulse" />
                   </motion.div>
                 ))}
-
-                {/* Connection lines SVG overlay */}
-                <svg className="absolute inset-0 w-full h-full" viewBox="0 0 420 420" style={{ zIndex: 15 }}>
-                  <motion.path d="M 118 92 Q 210 150 302 159" fill="none" stroke="hsl(46,66%,62%)" strokeWidth="0.8" strokeDasharray="4 3"
-                    initial={{ pathLength: 0, opacity: 0 }} animate={{ pathLength: 1, opacity: [0, 0.5, 0.5, 0] }}
-                    transition={{ duration: 3, repeat: Infinity, delay: 0 }} />
-                  <motion.path d="M 302 159 Q 280 220 147 252" fill="none" stroke="hsl(46,66%,62%)" strokeWidth="0.8" strokeDasharray="4 3"
-                    initial={{ pathLength: 0, opacity: 0 }} animate={{ pathLength: 1, opacity: [0, 0.5, 0.5, 0] }}
-                    transition={{ duration: 3, repeat: Infinity, delay: 1 }} />
-                  <motion.path d="M 118 92 Q 160 200 210 273" fill="none" stroke="hsl(46,66%,62%)" strokeWidth="0.8" strokeDasharray="4 3"
-                    initial={{ pathLength: 0, opacity: 0 }} animate={{ pathLength: 1, opacity: [0, 0.5, 0.5, 0] }}
-                    transition={{ duration: 3, repeat: Infinity, delay: 2 }} />
-                </svg>
-
-                {/* Floating stat cards */}
-                <motion.div animate={{ y: [-6, 6, -6] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                  className="absolute -top-4 -right-8 z-30 flex items-center gap-3 px-4 py-3 rounded-2xl backdrop-blur-md border border-white/10"
-                  style={{ background: "rgba(10,22,40,0.85)", boxShadow: "0 8px 32px rgba(0,0,0,0.4)" }}>
-                  <div className="w-9 h-9 rounded-xl bg-accent/20 flex items-center justify-center">
-                    <svg className="w-4 h-4 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                  </div>
-                  <div>
-                    <p className="text-white text-sm font-bold leading-tight">1,200+</p>
-                    <p className="text-white/40 text-xs">Verified Suppliers</p>
-                  </div>
-                </motion.div>
-
-                <motion.div animate={{ y: [6, -6, 6] }} transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-                  className="absolute -left-10 top-1/3 z-30 flex items-center gap-3 px-4 py-3 rounded-2xl backdrop-blur-md border border-white/10"
-                  style={{ background: "rgba(10,22,40,0.85)", boxShadow: "0 8px 32px rgba(0,0,0,0.4)" }}>
-                  <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: "rgba(26,74,154,0.4)" }}>
-                    <svg className="w-4 h-4 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                  </div>
-                  <div>
-                    <p className="text-white text-sm font-bold leading-tight">45+ Nations</p>
-                    <p className="text-white/40 text-xs">Global Reach</p>
-                  </div>
-                </motion.div>
-
-                <motion.div animate={{ y: [-4, 8, -4] }} transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                  className="absolute -bottom-2 -right-6 z-30 flex items-center gap-3 px-4 py-3 rounded-2xl backdrop-blur-md border border-white/10"
-                  style={{ background: "rgba(10,22,40,0.85)", boxShadow: "0 8px 32px rgba(0,0,0,0.4)" }}>
-                  <div className="w-9 h-9 rounded-xl bg-amber-500/20 flex items-center justify-center">
-                    <svg className="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-                  </div>
-                  <div>
-                    <p className="text-white text-sm font-bold leading-tight">500+</p>
-                    <p className="text-white/40 text-xs">Projects Done</p>
-                  </div>
-                </motion.div>
-
-                {/* Satisfaction pill */}
-                <motion.div animate={{ y: [5, -5, 5] }} transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
-                  className="absolute -left-8 bottom-16 z-30 flex items-center gap-2 px-3 py-2 rounded-full border border-accent/30 backdrop-blur-md"
-                  style={{ background: "rgba(0,166,90,0.12)" }}>
-                  <div className="flex gap-0.5">
-                    {[...Array(5)].map((_, i) => (
-                      <svg key={i} className="w-3 h-3 text-amber-400 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                    ))}
-                  </div>
-                  <span className="text-accent text-xs font-bold">97% Satisfaction</span>
-                </motion.div>
               </div>
+
+              {/* Floating stat cards */}
+              <motion.div animate={{ y: [-6, 6, -6] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute -top-4 -right-4 z-30 flex items-center gap-3 px-4 py-3 rounded-2xl backdrop-blur-md border border-white/10"
+                style={{ background: "rgba(10,22,40,0.85)", boxShadow: "0 8px 32px rgba(0,0,0,0.4)" }}>
+                <div className="w-9 h-9 rounded-xl bg-accent/20 flex items-center justify-center">
+                  <svg className="w-4 h-4 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                </div>
+                <div>
+                  <p className="text-white text-sm font-bold leading-tight">1,200+</p>
+                  <p className="text-white/40 text-xs">Verified Suppliers</p>
+                </div>
+              </motion.div>
+
+              <motion.div animate={{ y: [6, -6, 6] }} transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+                className="absolute -left-6 bottom-8 z-30 flex items-center gap-3 px-4 py-3 rounded-2xl backdrop-blur-md border border-white/10"
+                style={{ background: "rgba(10,22,40,0.85)", boxShadow: "0 8px 32px rgba(0,0,0,0.4)" }}>
+                <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: "rgba(26,74,154,0.4)" }}>
+                  <svg className="w-4 h-4 text-blue-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                </div>
+                <div>
+                  <p className="text-white text-sm font-bold leading-tight">45+ Nations</p>
+                  <p className="text-white/40 text-xs">Global Reach</p>
+                </div>
+              </motion.div>
             </motion.div>
           </div>
         </div>
@@ -410,6 +356,51 @@ export default function Home() {
         `}</style>
       </section>
 
+      {/* Global Sourcing Showcase */}
+      <section id="sourcing" className="py-24 bg-primary relative overflow-hidden">
+        <img
+          src="/images/sourcing-vehicle.png"
+          alt=""
+          aria-hidden
+          className="absolute inset-0 w-full h-full object-cover opacity-[0.08]"
+        />
+        <div className="absolute inset-0 bg-primary/90" />
+        <div className="max-w-7xl mx-auto px-6 relative z-10">
+          <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="text-center mb-16">
+            <span className="text-accent font-semibold text-sm tracking-widest uppercase">What We Source</span>
+            <h2 className="text-4xl font-extrabold text-white mt-3 mb-4">Global Sourcing in Action</h2>
+            <p className="text-white/60 max-w-2xl mx-auto">
+              From heavy machinery to fleet vehicles and commercial equipment — we connect you with the right suppliers across every category.
+            </p>
+          </motion.div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {sourcingShowcase.map(({ src, title, desc }, i) => (
+              <motion.div
+                key={title}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className="group relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 hover:bg-white/10 transition-all duration-300">
+                <div className="aspect-[4/3] overflow-hidden">
+                  <img
+                    src={src}
+                    alt={title}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+                </div>
+                <div className="absolute inset-0 bg-gradient-to-t from-primary via-primary/40 to-transparent opacity-80" />
+                <div className="absolute bottom-0 left-0 right-0 p-5">
+                  <div className="w-8 h-0.5 bg-accent mb-3" />
+                  <h3 className="text-white font-bold text-lg mb-1">{title}</h3>
+                  <p className="text-white/60 text-sm leading-relaxed">{desc}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* About */}
       <section id="about" className="py-24 bg-background">
         <div className="max-w-7xl mx-auto px-6">
@@ -436,7 +427,26 @@ export default function Home() {
                 ))}
               </div>
             </motion.div>
-            <div className="space-y-0">
+            <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}
+              className="relative">
+              <div className="grid grid-cols-2 gap-3 mb-8">
+                <div className="space-y-3">
+                  <div className="rounded-2xl overflow-hidden h-48 shadow-lg">
+                    <img src="/images/sourcing-cleaning.png" alt="Commercial cleaning equipment" className="w-full h-full object-cover" />
+                  </div>
+                  <div className="rounded-2xl overflow-hidden h-32 shadow-lg">
+                    <img src="/images/sourcing-vacuum.png" alt="Facility equipment" className="w-full h-full object-cover" />
+                  </div>
+                </div>
+                <div className="space-y-3 pt-8">
+                  <div className="rounded-2xl overflow-hidden h-32 shadow-lg">
+                    <img src="/images/sourcing-machinery.png" alt="Industrial machinery" className="w-full h-full object-cover" />
+                  </div>
+                  <div className="rounded-2xl overflow-hidden h-48 shadow-lg">
+                    <img src="/images/sourcing-vehicle.png" alt="Fleet and logistics" className="w-full h-full object-cover" />
+                  </div>
+                </div>
+              </div>
               <h3 className="text-xl font-bold text-primary mb-8">Our Journey</h3>
               {[
                 { year: "2016", title: "Founded", desc: "Started as a small sourcing consultancy serving local businesses." },
@@ -458,7 +468,7 @@ export default function Home() {
                   </div>
                 </motion.div>
               ))}
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>
@@ -517,8 +527,15 @@ export default function Home() {
       </section>
 
       {/* Procurement Process */}
-      <section id="process" className="py-24 bg-primary">
-        <div className="max-w-7xl mx-auto px-6">
+      <section id="process" className="py-24 bg-primary relative overflow-hidden">
+        <img
+          src="/images/sourcing-machinery.png"
+          alt=""
+          aria-hidden
+          className="absolute inset-0 w-full h-full object-cover opacity-[0.06]"
+        />
+        <div className="absolute inset-0 bg-primary/95" />
+        <div className="max-w-7xl mx-auto px-6 relative z-10">
           <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="text-center mb-16">
             <span className="text-accent font-semibold text-sm tracking-widest uppercase">How It Works</span>
             <h2 className="text-4xl font-extrabold text-white mt-3 mb-4">Our Procurement Process</h2>
@@ -752,7 +769,7 @@ export default function Home() {
             <div>
               <h4 className="font-bold text-sm uppercase tracking-wide mb-4">Quick Links</h4>
               <ul className="space-y-2">
-                {[["About", "about"], ["Services", "services"], ["Process", "process"], ["Industries", "industries"], ["Contact", "contact"]].map(([label, id]) => (
+                {[["About", "about"], ["Sourcing", "sourcing"], ["Services", "services"], ["Process", "process"], ["Industries", "industries"], ["Contact", "contact"]].map(([label, id]) => (
                   <li key={id}><a href={`#${id}`} className="text-sm text-primary-foreground/60 hover:text-accent transition-colors">{label}</a></li>
                 ))}
               </ul>

@@ -122,24 +122,37 @@ export default function Request() {
   }
 
   return (
-    <div className="min-h-screen bg-secondary py-12 px-4">
-      <div className="max-w-3xl mx-auto">
-        <div className="flex items-center justify-between mb-8">
-          <img src="/logo.png" alt="Just-In-Time Consultancy LLC" className="h-12 w-auto object-contain" />
-          <Button
-            variant="ghost"
-            onClick={() => setLocation("/")}
-          >
-            &larr; Back to Home
-          </Button>
+    <div className="min-h-screen bg-secondary">
+      <div className="relative overflow-hidden">
+        <img
+          src="/images/sourcing-machinery.png"
+          alt=""
+          aria-hidden
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-primary/85" />
+        <div className="relative z-10 max-w-3xl mx-auto px-4 pt-8 pb-12">
+          <div className="flex items-center justify-between mb-6">
+            <img src="/logo.png" alt="Just-In-Time Consultancy LLC" className="h-12 w-auto object-contain bg-white rounded-lg p-1.5" />
+            <Button
+              variant="ghost"
+              onClick={() => setLocation("/")}
+              className="text-white/80 hover:text-white hover:bg-white/10"
+            >
+              &larr; Back to Home
+            </Button>
+          </div>
+          <h1 className="text-3xl md:text-4xl font-bold text-white">Procurement Request</h1>
+          <p className="text-white/60 mt-2 max-w-lg">
+            Tell us what you need — from equipment and machinery to fleet vehicles. Our team will source it globally.
+          </p>
         </div>
+      </div>
 
+      <div className="max-w-3xl mx-auto px-4 -mt-6 pb-12 relative z-10">
         <div className="bg-card rounded-xl shadow-sm border border-border p-6 md:p-8">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-primary">
-              Procurement Request
-            </h1>
-            <p className="text-muted-foreground mt-2">
+            <p className="text-muted-foreground">
               Step {step} of 4
             </p>
           </div>
