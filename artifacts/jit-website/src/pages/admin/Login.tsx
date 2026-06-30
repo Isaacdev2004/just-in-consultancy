@@ -2,7 +2,11 @@ import { useLocation } from "wouter";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { useAdminLogin } from "@workspace/api-client-react";
+import { useQueryClient } from "@tanstack/react-query";
+import {
+  useAdminLogin,
+  getGetAdminMeQueryKey,
+} from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -24,6 +28,7 @@ const loginSchema = z.object({
 export default function AdminLogin() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
+  const queryClient = useQueryClient();
   const loginMutation = useAdminLogin();
 
   const form = useForm<z.infer<typeof loginSchema>>({
@@ -38,7 +43,8 @@ export default function AdminLogin() {
     loginMutation.mutate(
       { data: values },
       {
-        onSuccess: () => {
+        onSuccess: async () => {
+          await queryClient.invalidateQueries({ queryKey: getGetAdminMeQueryKey() });
           setLocation("/admin/dashboard");
         },
         onError: () => {

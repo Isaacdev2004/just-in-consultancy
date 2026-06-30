@@ -19,10 +19,11 @@ const updateRequestSchema = z.object({
   adminNotes: z.string().nullable().optional(),
 });
 
-router.post("/admin/login", async (req, res) => {
+router.post("/admin/login", async (req, res): Promise<void> => {
   const parsed = loginSchema.safeParse(req.body);
   if (!parsed.success) {
-    return res.status(400).json({ error: "Invalid input" });
+    res.status(400).json({ error: "Invalid input" });
+    return;
   }
 
   const [admin] = await db
@@ -32,20 +33,36 @@ router.post("/admin/login", async (req, res) => {
     .limit(1);
 
   if (!admin) {
-    return res.status(401).json({ error: "Invalid credentials" });
+    res.status(401).json({ error: "Invalid credentials" });
+    return;
   }
 
   const valid = await bcrypt.compare(parsed.data.password, admin.passwordHash);
   if (!valid) {
-    return res.status(401).json({ error: "Invalid credentials" });
+    res.status(401).json({ error: "Invalid credentials" });
+    return;
   }
 
-  req.session.adminId = admin.id;
-  req.session.adminUsername = admin.username;
+  void req.session.regenerate((regErr) => {
+    if (regErr) {
+      res.status(500).json({ error: "Failed to create session" });
+      return;
+    }
 
-  return res.json({
-    message: "Login successful",
-    admin: { id: admin.id, username: admin.username },
+    req.session.adminId = admin.id;
+    req.session.adminUsername = admin.username;
+
+    req.session.save((saveErr) => {
+      if (saveErr) {
+        res.status(500).json({ error: "Failed to create session" });
+        return;
+      }
+
+      res.json({
+        message: "Login successful",
+        admin: { id: admin.id, username: admin.username },
+      });
+    });
   });
 });
 

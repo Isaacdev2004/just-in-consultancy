@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "wouter";
 import {
   useGetAdminMe,
@@ -112,6 +112,12 @@ export default function AdminDashboard() {
     { query: { queryKey: getExportAdminRequestsQueryKey({}), enabled: false } }
   );
 
+  useEffect(() => {
+    if (!isLoadingAuth && (authError || !admin)) {
+      setLocation("/admin");
+    }
+  }, [admin, authError, isLoadingAuth, setLocation]);
+
   if (isLoadingAuth) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -124,7 +130,6 @@ export default function AdminDashboard() {
   }
 
   if (authError || !admin) {
-    setLocation("/admin");
     return null;
   }
 
