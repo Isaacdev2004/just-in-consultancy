@@ -1,5 +1,6 @@
 import express, { type Express } from "express";
 import cors from "cors";
+import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import pinoHttp from "pino-http";
@@ -16,6 +17,66 @@ if (process.env.NODE_ENV === "production") {
 }
 
 const PgSession = connectPgSimple(session);
+
+function resolveFrontendDir(): string | null {
+  const candidates = [
+    process.env.FRONTEND_DIR,
+    path.resolve(
+      fileURLToPath(new URL(".", import.meta.url)),
+      "../../jit-website/dist/public",
+    ),
+    path.resolve(process.cwd(), "artifacts/jit-website/dist/public"),
+    path.resolve(process.cwd(), "../jit-website/dist/public"),
+  ].filter((value): value is string => Boolean(value));
+
+  for (const candidate of candidates) {
+    const indexPath = path.join(candidate, "index.html");
+    if (fs.existsSync(indexPath)) {
+      return candidate;
+    }
+  }
+
+  return null;
+}
+
+function setupFrontend(app: Express): void {
+  const frontendDir = resolveFrontendDir();
+
+  if (!frontendDir) {
+    logger.warn("Frontend build not found; client-side routes like /admin will 404");
+    return;
+  }
+
+  logger.info({ frontendDir }, "Serving frontend static files");
+
+  const staticMiddleware = express.static(frontendDir, { fallthrough: true });
+
+  app.use((req, res, next) => {
+    if (req.path.startsWith("/api")) {
+      return next();
+    }
+
+    staticMiddleware(req, res, (err) => {
+      if (err) {
+        return next(err);
+      }
+
+      if (res.headersSent) {
+        return;
+      }
+
+      if (req.method !== "GET" && req.method !== "HEAD") {
+        return next();
+      }
+
+      res.sendFile(path.join(frontendDir, "index.html"), (sendErr) => {
+        if (sendErr) {
+          next(sendErr);
+        }
+      });
+    });
+  });
+}
 
 app.use(
   pinoHttp({
@@ -70,15 +131,7 @@ app.use(
 app.use("/api", router);
 
 if (process.env.NODE_ENV === "production") {
-  const frontendDir = path.resolve(
-    fileURLToPath(new URL(".", import.meta.url)),
-    "../../jit-website/dist/public",
-  );
-
-  app.use(express.static(frontendDir));
-  app.use((_req, res) => {
-    res.sendFile(path.join(frontendDir, "index.html"));
-  });
+  setupFrontend(app);
 }
 
 export default app;
