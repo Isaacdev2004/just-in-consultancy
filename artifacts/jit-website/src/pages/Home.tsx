@@ -168,27 +168,27 @@ export default function Home() {
     <div className="min-h-screen bg-background">
       {/* Navbar */}
       <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled ? "bg-white/98 backdrop-blur-md shadow-sm border-b border-border" : "bg-white/95 backdrop-blur-md shadow-sm"}`}>
-        <div className="max-w-7xl mx-auto px-6 h-24 md:h-32 flex items-center justify-between">
-          <Link href="/" className="flex items-center shrink-0 max-w-[70vw] md:max-w-none">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-20 md:h-24 flex items-center justify-between gap-3 md:gap-6">
+          <Link href="/" className="flex items-center shrink min-w-0">
             <img
               src="/logo.png"
               alt="Just-In-Time Consultancy LLC"
-              className="h-20 md:h-28 w-auto max-h-full object-contain"
+              className="h-14 sm:h-16 md:h-20 w-auto max-h-[3.5rem] sm:max-h-16 md:max-h-[5rem] object-contain"
             />
           </Link>
-          <div className="hidden lg:flex items-center gap-8">
+          <div className="hidden lg:flex items-center gap-6 xl:gap-8">
             {[["About", "about"], ["Sourcing", "sourcing"], ["Services", "services"], ["Process", "process"], ["Industries", "industries"], ["Contact", "contact"]].map(([label, id]) => (
               <a key={id} href={`#${id}`} className="text-sm font-medium text-foreground/60 hover:text-primary transition-colors duration-200">{label}</a>
             ))}
           </div>
-          <Button onClick={() => setLocation("/request")} className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold shadow-lg shadow-accent/25">
+          <Button onClick={() => setLocation("/request")} className="shrink-0 bg-accent hover:bg-accent/90 text-accent-foreground font-semibold shadow-lg shadow-accent/25 text-sm md:text-base px-4 md:px-6 h-10 md:h-11">
             Request a Service
           </Button>
         </div>
       </nav>
 
       {/* Hero */}
-      <section className="min-h-screen flex flex-col relative overflow-hidden" style={{ background: "linear-gradient(135deg, #1A365D 0%, #152e4f 40%, #0f2340 100%)" }}>
+      <section className="min-h-screen flex flex-col relative overflow-hidden pt-20 md:pt-24" style={{ background: "linear-gradient(135deg, #1A365D 0%, #152e4f 40%, #0f2340 100%)" }}>
         {/* Background layers */}
         <div className="absolute inset-0">
           {/* Hero background photo */}
@@ -211,7 +211,7 @@ export default function Home() {
 
         {/* Main hero content */}
         <div className="flex-1 flex items-center relative z-10">
-          <div className="max-w-7xl mx-auto px-6 w-full py-28 grid lg:grid-cols-2 gap-12 items-center">
+          <div className="max-w-7xl mx-auto px-6 w-full py-10 md:py-14 lg:py-16 grid lg:grid-cols-2 gap-10 lg:gap-12 items-center">
 
             {/* Left — Text */}
             <div>
