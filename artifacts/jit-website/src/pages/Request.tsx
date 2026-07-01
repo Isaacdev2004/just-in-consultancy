@@ -133,7 +133,7 @@ export default function Request() {
         <div className="absolute inset-0 bg-primary/85" />
         <div className="relative z-10 max-w-3xl mx-auto px-4 pt-8 pb-12">
           <div className="flex items-center justify-between mb-6">
-            <img src="/logo.png" alt="Just-In-Time Consultancy LLC" className="h-12 w-auto object-contain bg-white rounded-lg p-1.5" />
+            <img src="/logo.png" alt="Just-In-Time Consultancy LLC" className="h-16 md:h-20 w-auto object-contain bg-white rounded-lg p-2" />
             <Button
               variant="ghost"
               onClick={() => setLocation("/")}

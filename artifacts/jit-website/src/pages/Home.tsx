@@ -173,7 +173,7 @@ export default function Home() {
             <img
               src="/logo.png"
               alt="Just-In-Time Consultancy LLC"
-              className="h-12 md:h-14 w-auto object-contain"
+              className="h-16 md:h-20 w-auto object-contain"
             />
           </Link>
           <div className="hidden lg:flex items-center gap-8">
@@ -760,7 +760,7 @@ export default function Home() {
               <img
                 src="/logo.png"
                 alt="Just-In-Time Consultancy LLC"
-                className="h-16 w-auto object-contain mb-4 bg-white rounded-lg p-2"
+                className="h-20 md:h-24 w-auto object-contain mb-4 bg-white rounded-lg p-2"
               />
               <p className="text-primary-foreground/60 text-sm leading-relaxed max-w-xs">
                 Empowering businesses through precision procurement, global sourcing, and supply chain excellence.

@@ -63,7 +63,7 @@ export default function AdminLogin() {
       <img
         src="/logo.png"
         alt="Just-In-Time Consultancy LLC"
-        className="h-14 w-auto object-contain mb-8"
+        className="h-20 w-auto object-contain mb-8"
       />
       <Card className="w-full max-w-md border-border">
         <CardHeader className="text-center">
