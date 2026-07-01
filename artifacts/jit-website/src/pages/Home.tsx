@@ -760,7 +760,7 @@ export default function Home() {
               <img
                 src="/logo.png"
                 alt="Just-In-Time Consultancy LLC"
-                className="h-20 md:h-24 w-auto object-contain mb-4 bg-white rounded-lg p-2"
+                className="h-20 md:h-24 w-auto object-contain mb-4 bg-white/95 rounded-lg px-3 py-2"
               />
               <p className="text-primary-foreground/60 text-sm leading-relaxed max-w-xs">
                 Empowering businesses through precision procurement, global sourcing, and supply chain excellence.
