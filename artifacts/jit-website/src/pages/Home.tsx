@@ -168,12 +168,12 @@ export default function Home() {
     <div className="min-h-screen bg-background">
       {/* Navbar */}
       <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled ? "bg-white/98 backdrop-blur-md shadow-sm border-b border-border" : "bg-white/95 backdrop-blur-md shadow-sm"}`}>
-        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-          <Link href="/" className="flex items-center shrink-0">
+        <div className="max-w-7xl mx-auto px-6 h-24 md:h-32 flex items-center justify-between">
+          <Link href="/" className="flex items-center shrink-0 max-w-[70vw] md:max-w-none">
             <img
               src="/logo.png"
               alt="Just-In-Time Consultancy LLC"
-              className="h-16 md:h-20 w-auto object-contain"
+              className="h-20 md:h-28 w-auto max-h-full object-contain"
             />
           </Link>
           <div className="hidden lg:flex items-center gap-8">
@@ -760,7 +760,7 @@ export default function Home() {
               <img
                 src="/logo.png"
                 alt="Just-In-Time Consultancy LLC"
-                className="h-20 md:h-24 w-auto object-contain mb-4 bg-white/95 rounded-lg px-3 py-2"
+                className="h-28 md:h-36 w-auto object-contain mb-4 bg-white/95 rounded-lg px-2 py-1.5"
               />
               <p className="text-primary-foreground/60 text-sm leading-relaxed max-w-xs">
                 Empowering businesses through precision procurement, global sourcing, and supply chain excellence.

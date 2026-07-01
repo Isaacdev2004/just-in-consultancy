@@ -243,7 +243,7 @@ export default function AdminDashboard() {
       {/* Sidebar */}
       <aside className="w-64 bg-primary text-primary-foreground flex flex-col shrink-0">
         <div className="p-6 border-b border-white/10">
-          <img src="/logo.png" alt="Just-In-Time Consultancy LLC" className="h-16 w-auto object-contain mb-2 bg-white/95 rounded-lg px-3 py-2" />
+          <img src="/logo.png" alt="Just-In-Time Consultancy LLC" className="h-20 w-auto object-contain mb-2 bg-white/95 rounded-lg px-2 py-1.5" />
           <p className="text-xs text-white/60">Admin Portal</p>
         </div>
         <nav className="flex-1 p-4 space-y-1">
