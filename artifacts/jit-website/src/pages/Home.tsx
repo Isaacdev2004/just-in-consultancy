@@ -64,7 +64,7 @@ const stagger = {
 };
 
 const sourcingShowcase = [
-  { src: "/images/sourcing-machinery.png", title: "Heavy Equipment", desc: "Construction & industrial machinery from verified global manufacturers." },
+  { src: "/images/sourcing-logistics.jpg", title: "Industrial & Logistics", desc: "Well-lit warehouse, port, and distribution facilities from audited global partners." },
   { src: "/images/sourcing-vacuum.png", title: "Commercial Equipment", desc: "Facility management and professional cleaning systems." },
   { src: "/images/sourcing-cleaning.png", title: "Specialty Systems", desc: "Professional-grade maintenance and extraction solutions." },
   { src: "/images/sourcing-vehicle.png", title: "Fleet & Logistics", desc: "Commercial vehicles and fleet procurement worldwide." },
@@ -172,16 +172,16 @@ export default function Home() {
     <div className="min-h-screen bg-background">
       {/* Navbar */}
       <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled ? "bg-white/98 backdrop-blur-md shadow-sm border-b border-border" : "bg-white/95 backdrop-blur-md shadow-sm"}`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-20 md:h-24 flex items-center justify-between gap-3 md:gap-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-[5.5rem] md:h-28 flex items-center justify-between gap-3 md:gap-6">
           <Link href="/" className="flex items-center shrink min-w-0">
             <img
               src="/logo.png"
               alt="Just-In-Time Consultancy LLC"
-              className="h-14 sm:h-16 md:h-20 w-auto max-h-[3.5rem] sm:max-h-16 md:max-h-[5rem] object-contain"
+              className="h-[3.25rem] sm:h-16 md:h-[5.25rem] w-auto object-contain"
             />
           </Link>
           <div className="hidden lg:flex items-center gap-6 xl:gap-8">
-            {[["About", "about"], ["Sourcing", "sourcing"], ["Services", "services"], ["Process", "process"], ["Industries", "industries"], ["Contact", "contact"]].map(([label, id]) => (
+            {[["About", "about"], ["Team", "leadership"], ["Sourcing", "sourcing"], ["Services", "services"], ["Process", "process"], ["Industries", "industries"], ["Contact", "contact"]].map(([label, id]) => (
               <a key={id} href={`#${id}`} className="text-sm font-medium text-foreground/60 hover:text-primary transition-colors duration-200">{label}</a>
             ))}
           </div>
@@ -192,7 +192,7 @@ export default function Home() {
       </nav>
 
       {/* Hero */}
-      <section className="min-h-screen flex flex-col relative overflow-hidden pt-20 md:pt-24" style={{ background: "linear-gradient(135deg, #1A365D 0%, #152e4f 40%, #0f2340 100%)" }}>
+      <section className="min-h-screen flex flex-col relative overflow-hidden pt-[5.5rem] md:pt-28" style={{ background: "linear-gradient(135deg, #1A365D 0%, #152e4f 40%, #0f2340 100%)" }}>
         {/* Background layers */}
         <div className="absolute inset-0">
           {/* Hero background photo */}
@@ -363,7 +363,7 @@ export default function Home() {
       {/* Global Sourcing Showcase */}
       <section id="sourcing" className="py-24 bg-primary relative overflow-hidden">
         <img
-          src="/images/sourcing-vehicle.png"
+          src={HERO_BG}
           alt=""
           aria-hidden
           className="absolute inset-0 w-full h-full object-cover opacity-[0.08]"
@@ -374,7 +374,7 @@ export default function Home() {
             <span className="text-accent font-semibold text-sm tracking-widest uppercase">What We Source</span>
             <h2 className="text-4xl font-extrabold text-white mt-3 mb-4">Global Sourcing in Action</h2>
             <p className="text-white/60 max-w-2xl mx-auto">
-              From heavy machinery to fleet vehicles and commercial equipment — we connect you with the right suppliers across every category.
+              From industrial equipment to fleet vehicles and commercial systems — we connect you with the right suppliers across every category.
             </p>
           </motion.div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -444,7 +444,7 @@ export default function Home() {
                 </div>
                 <div className="space-y-3 pt-8">
                   <div className="rounded-2xl overflow-hidden h-32 shadow-lg">
-                    <img src="/images/sourcing-machinery.png" alt="Industrial machinery" className="w-full h-full object-cover" />
+                    <img src="/images/sourcing-logistics.jpg" alt="Logistics and warehouse operations" className="w-full h-full object-cover" />
                   </div>
                   <div className="rounded-2xl overflow-hidden h-48 shadow-lg">
                     <img src="/images/sourcing-vehicle.png" alt="Fleet and logistics" className="w-full h-full object-cover" />
@@ -453,11 +453,11 @@ export default function Home() {
               </div>
               <h3 className="text-xl font-bold text-primary mb-8">Our Journey</h3>
               {[
-                { year: "2016", title: "Founded", desc: "Started as a small sourcing consultancy serving local businesses." },
-                { year: "2018", title: "Global Expansion", desc: "Expanded operations to Asia and Europe, building our first major supplier network." },
-                { year: "2020", title: "Digital Transformation", desc: "Launched our digital procurement platform and quality management system." },
-                { year: "2022", title: "1,000+ Suppliers", desc: "Crossed the milestone of 1,000 verified suppliers across 40+ countries." },
-                { year: "2024", title: "350+ Clients Served", desc: "Proudly serving businesses across 45 countries with a 97% satisfaction rate." },
+                { year: "2016", title: "Founded in Massachusetts", desc: "Albert Ofori Appiah launches Just-In-Time Consultancy in the U.S., helping SMBs source industrial equipment, facility supplies, and MRO products domestically and abroad." },
+                { year: "2018", title: "West Africa & Asia Networks", desc: "Established verified supplier partnerships in Ghana, Nigeria, India, and Southeast Asia — focused on manufacturing inputs and commercial equipment." },
+                { year: "2020", title: "Digital Procurement Platform", desc: "Rolled out online request workflows, supplier scorecards, and pre-shipment QC inspection reporting for remote international buyers." },
+                { year: "2022", title: "1,000+ Verified Suppliers", desc: "Crossed 1,000 audited suppliers across 40+ countries, with dedicated pipelines for healthcare, construction, and hospitality procurement." },
+                { year: "2024", title: "350+ Active Clients", desc: "Serving buyers in 45+ countries from our U.S. headquarters (+1 508 388-1790), with a 97% post-project satisfaction rate from client surveys." },
               ].map(({ year, title, desc }, i) => (
                 <motion.div key={year} initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}
                   className="flex gap-6 pb-8 relative">
@@ -478,7 +478,7 @@ export default function Home() {
       </section>
 
       {/* Leadership */}
-      <section className="py-24 bg-secondary">
+      <section id="leadership" className="py-24 bg-secondary">
         <div className="max-w-7xl mx-auto px-6">
           <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="text-center mb-12">
             <span className="text-accent font-semibold text-sm tracking-widest uppercase">Leadership</span>
@@ -616,7 +616,7 @@ export default function Home() {
                   </svg>
                 </div>
                 <span className="font-semibold text-sm text-primary group-hover:text-white transition-colors">{name}</span>
-                <p className="text-xs text-muted-foreground group-hover:text-white/70 leading-relaxed transition-colors">{desc}</p>
+                <p className="text-sm text-muted-foreground group-hover:text-white/75 leading-relaxed transition-colors">{desc}</p>
               </motion.div>
             ))}
           </div>
@@ -626,13 +626,14 @@ export default function Home() {
       {/* Statistics */}
       <section className="py-24 bg-accent">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-8 text-center">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 text-center">
             {[
               { end: 500, suffix: "+", label: "Projects Completed" },
               { end: 350, suffix: "+", label: "Satisfied Clients" },
               { end: 1200, suffix: "+", label: "Verified Suppliers" },
               { end: 45, suffix: "+", label: "Countries Served" },
               { end: 8, suffix: "+", label: "Years of Experience" },
+              { end: 97, suffix: "%", label: "Client Satisfaction" },
             ].map(({ end, suffix, label }, i) => (
               <motion.div key={label} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
                 <div className="text-4xl md:text-5xl font-extrabold text-white mb-2">
@@ -642,6 +643,9 @@ export default function Home() {
               </motion.div>
             ))}
           </div>
+          <p className="text-center text-white/60 text-xs md:text-sm mt-10 max-w-3xl mx-auto leading-relaxed">
+            Figures reflect completed procurement engagements through 2025. Client satisfaction rate based on post-project surveys conducted with 200+ buyers (2022–2025). References available upon request.
+          </p>
         </div>
       </section>
 
@@ -651,25 +655,32 @@ export default function Home() {
           <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="text-center mb-16">
             <span className="text-accent font-semibold text-sm tracking-widest uppercase">Client Stories</span>
             <h2 className="text-4xl font-extrabold text-primary mt-3 mb-4">What Our Clients Say</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">Verified client feedback from procurement leaders across healthcare, manufacturing, and international trade.</p>
           </motion.div>
           <div className="grid md:grid-cols-2 gap-6">
             {testimonials.map(({ name, company, role, text, avatar }, i) => (
               <motion.div key={name} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
                 <Card className="h-full bg-card border-border hover:shadow-lg transition-shadow duration-300">
                   <CardContent className="p-8">
-                    <div className="flex gap-1 mb-4">
-                      {Array.from({ length: 5 }).map((_, j) => (
-                        <svg key={j} className="w-4 h-4 text-amber-400 fill-current" viewBox="0 0 20 20">
-                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-                        </svg>
-                      ))}
+                    <div className="flex items-center justify-between gap-3 mb-4">
+                      <div className="flex gap-1">
+                        {Array.from({ length: 5 }).map((_, j) => (
+                          <svg key={j} className="w-4 h-4 text-amber-400 fill-current" viewBox="0 0 20 20">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                          </svg>
+                        ))}
+                      </div>
+                      <span className="inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wide text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-full px-2.5 py-1">
+                        <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/></svg>
+                        Verified Client
+                      </span>
                     </div>
                     <p className="text-foreground/80 leading-relaxed mb-6 italic">"{text}"</p>
                     <div className="flex items-center gap-4">
                       <img
                         src={avatar}
                         alt={name}
-                        className="w-12 h-12 rounded-full object-cover ring-2 ring-accent/30"
+                        className="w-14 h-14 rounded-full object-cover ring-2 ring-accent/30"
                       />
                       <div>
                         <p className="font-bold text-primary text-sm">{name}</p>
@@ -681,6 +692,10 @@ export default function Home() {
               </motion.div>
             ))}
           </div>
+          <p className="text-center text-sm text-muted-foreground mt-10 max-w-2xl mx-auto leading-relaxed">
+            Client references and detailed case studies are available upon request.{" "}
+            <a href="#contact" className="text-accent font-semibold hover:underline">Contact us</a> to speak with a reference client in your industry.
+          </p>
         </div>
       </section>
 
@@ -809,7 +824,7 @@ export default function Home() {
             <div>
               <h4 className="font-bold text-sm uppercase tracking-wide mb-4">Quick Links</h4>
               <ul className="space-y-2">
-                {[["About", "about"], ["Sourcing", "sourcing"], ["Services", "services"], ["Process", "process"], ["Industries", "industries"], ["Contact", "contact"]].map(([label, id]) => (
+                {[["About", "about"], ["Team", "leadership"], ["Sourcing", "sourcing"], ["Services", "services"], ["Process", "process"], ["Industries", "industries"], ["Contact", "contact"]].map(([label, id]) => (
                   <li key={id}><a href={`#${id}`} className="text-sm text-primary-foreground/60 hover:text-accent transition-colors">{label}</a></li>
                 ))}
               </ul>
