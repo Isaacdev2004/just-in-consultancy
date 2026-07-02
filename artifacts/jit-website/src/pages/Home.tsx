@@ -70,6 +70,10 @@ const sourcingShowcase = [
   { src: "/images/sourcing-vehicle.png", title: "Fleet & Logistics", desc: "Commercial vehicles and fleet procurement worldwide." },
 ];
 
+const HERO_BG = "/images/hero-professional.jpg";
+const PHONE = "+1 (508) 388-1790";
+const PHONE_HREF = "tel:+15083881790";
+
 export default function Home() {
   const [scrolled, setScrolled] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
@@ -136,21 +140,21 @@ export default function Home() {
   ];
 
   const industries = [
-    { name: "Healthcare", icon: "M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" },
-    { name: "Manufacturing", icon: "M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" },
-    { name: "Construction", icon: "M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" },
-    { name: "Agriculture", icon: "M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" },
-    { name: "Retail", icon: "M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" },
-    { name: "Technology", icon: "M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" },
-    { name: "Hospitality", icon: "M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" },
-    { name: "Government", icon: "M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" },
+    { name: "Healthcare", desc: "Medical devices, PPE, and hospital supplies sourced to FDA and ISO standards.", icon: "M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" },
+    { name: "Manufacturing", desc: "Raw materials, components, and production equipment for lean global supply chains.", icon: "M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" },
+    { name: "Construction", desc: "Heavy machinery, building materials, and site equipment from audited suppliers.", icon: "M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" },
+    { name: "Agriculture", desc: "Farm equipment, irrigation systems, and agri-inputs for commercial growers worldwide.", icon: "M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" },
+    { name: "Retail", desc: "Consumer goods, packaging, and private-label products at competitive wholesale volumes.", icon: "M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" },
+    { name: "Technology", desc: "Electronics, IT hardware, and components with full spec verification and warranty support.", icon: "M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" },
+    { name: "Hospitality", desc: "Commercial kitchen, housekeeping, and guest amenity supplies for hotels and resorts.", icon: "M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" },
+    { name: "Government", desc: "Compliant procurement for public-sector tenders, NGOs, and institutional buyers.", icon: "M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" },
   ];
 
   const testimonials = [
-    { name: "Sarah Mitchell", company: "TechNova Solutions", role: "Head of Procurement", text: "Just-In-Time Consultancy transformed our sourcing process completely. We cut procurement costs by 28% in the first year while improving supplier quality significantly. Their global network is genuinely impressive." },
-    { name: "David Okonkwo", company: "Meridian Healthcare Ltd", role: "Operations Director", text: "For medical equipment sourcing in markets where trust is everything, JIT has been an invaluable partner. Their supplier verification process is thorough and their team is incredibly responsive." },
-    { name: "Amara Diallo", company: "West Africa Trading Co.", role: "Managing Director", text: "We've worked with JIT on over 40 procurement projects across 12 countries. Their logistics coordination and customs expertise has saved us countless hours and significant costs." },
-    { name: "James Thornton", company: "Thornton Manufacturing Group", role: "CEO", text: "Professional, reliable, and results-driven. JIT helped us establish a robust supply chain for our new product line in under 3 months. I highly recommend them to any business scaling globally." },
+    { name: "Sarah Mitchell", company: "TechNova Solutions", role: "Head of Procurement", avatar: "/images/team/testimonial-sarah.jpg", text: "Just-In-Time Consultancy transformed our sourcing process completely. We cut procurement costs by 28% in the first year while improving supplier quality significantly. Their global network is genuinely impressive." },
+    { name: "David Okonkwo", company: "Meridian Healthcare Ltd", role: "Operations Director", avatar: "/images/team/testimonial-david.jpg", text: "For medical equipment sourcing in markets where trust is everything, JIT has been an invaluable partner. Their supplier verification process is thorough and their team is incredibly responsive." },
+    { name: "Amara Diallo", company: "West Africa Trading Co.", role: "Managing Director", avatar: "/images/team/testimonial-amara.jpg", text: "We've worked with JIT on over 40 procurement projects across 12 countries. Their logistics coordination and customs expertise has saved us countless hours and significant costs." },
+    { name: "James Thornton", company: "Thornton Manufacturing Group", role: "CEO", avatar: "/images/team/testimonial-james.jpg", text: "Professional, reliable, and results-driven. JIT helped us establish a robust supply chain for our new product line in under 3 months. I highly recommend them to any business scaling globally." },
   ];
 
   const faqs = [
@@ -193,7 +197,7 @@ export default function Home() {
         <div className="absolute inset-0">
           {/* Hero background photo */}
           <img
-            src="/images/sourcing-machinery.png"
+            src={HERO_BG}
             alt=""
             aria-hidden
             className="absolute inset-0 w-full h-full object-cover opacity-[0.12] mix-blend-luminosity"
@@ -473,6 +477,34 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Leadership */}
+      <section className="py-24 bg-secondary">
+        <div className="max-w-7xl mx-auto px-6">
+          <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} className="text-center mb-12">
+            <span className="text-accent font-semibold text-sm tracking-widest uppercase">Leadership</span>
+            <h2 className="text-4xl font-extrabold text-primary mt-3 mb-4">Meet Our Founder</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">Built on decades of procurement expertise and a commitment to connecting businesses with the world's best suppliers.</p>
+          </motion.div>
+          <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}
+            className="max-w-3xl mx-auto bg-card border border-border rounded-2xl overflow-hidden shadow-lg grid md:grid-cols-5">
+            <div className="md:col-span-2 aspect-square md:aspect-auto">
+              <img
+                src="/images/team/founder-albert.jpg"
+                alt="Albert Ofori Appiah, Founder & CEO"
+                className="w-full h-full object-cover min-h-[280px]"
+              />
+            </div>
+            <div className="md:col-span-3 p-8 md:p-10 flex flex-col justify-center">
+              <p className="text-accent font-semibold text-sm tracking-widest uppercase mb-2">Founder & CEO</p>
+              <h3 className="text-2xl md:text-3xl font-extrabold text-primary mb-4">Albert Ofori Appiah</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                Albert founded Just-In-Time Consultancy to give businesses of every size access to world-class procurement intelligence. With deep experience in global trade and supplier development, he leads a team dedicated to delivering smarter sourcing, faster turnaround, and measurable cost savings for clients across 45+ countries.
+              </p>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
       {/* Services */}
       <section id="services" className="py-24 bg-secondary">
         <div className="max-w-7xl mx-auto px-6">
@@ -529,7 +561,7 @@ export default function Home() {
       {/* Procurement Process */}
       <section id="process" className="py-24 bg-primary relative overflow-hidden">
         <img
-          src="/images/sourcing-machinery.png"
+          src={HERO_BG}
           alt=""
           aria-hidden
           className="absolute inset-0 w-full h-full object-cover opacity-[0.06]"
@@ -574,16 +606,17 @@ export default function Home() {
             <h2 className="text-4xl font-extrabold text-primary mt-3 mb-4">Cross-Industry Expertise</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">Our procurement expertise spans the full spectrum of industries, each with its own compliance, quality, and supply chain demands.</p>
           </motion.div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {industries.map(({ name, icon }, i) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {industries.map(({ name, desc, icon }, i) => (
               <motion.div key={name} initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }}
-                className="group flex flex-col items-center gap-4 p-8 rounded-2xl bg-secondary hover:bg-primary hover:shadow-lg transition-all duration-300 cursor-default">
-                <div className="w-14 h-14 rounded-2xl bg-primary/5 group-hover:bg-white/10 flex items-center justify-center transition-colors">
+                className="group flex flex-col items-center gap-3 p-6 md:p-8 rounded-2xl bg-secondary hover:bg-primary hover:shadow-lg transition-all duration-300 cursor-default text-center">
+                <div className="w-14 h-14 rounded-2xl bg-primary/5 group-hover:bg-white/10 flex items-center justify-center transition-colors shrink-0">
                   <svg className="w-7 h-7 text-primary group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d={icon} />
                   </svg>
                 </div>
-                <span className="font-semibold text-sm text-primary group-hover:text-white transition-colors text-center">{name}</span>
+                <span className="font-semibold text-sm text-primary group-hover:text-white transition-colors">{name}</span>
+                <p className="text-xs text-muted-foreground group-hover:text-white/70 leading-relaxed transition-colors">{desc}</p>
               </motion.div>
             ))}
           </div>
@@ -620,7 +653,7 @@ export default function Home() {
             <h2 className="text-4xl font-extrabold text-primary mt-3 mb-4">What Our Clients Say</h2>
           </motion.div>
           <div className="grid md:grid-cols-2 gap-6">
-            {testimonials.map(({ name, company, role, text }, i) => (
+            {testimonials.map(({ name, company, role, text, avatar }, i) => (
               <motion.div key={name} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
                 <Card className="h-full bg-card border-border hover:shadow-lg transition-shadow duration-300">
                   <CardContent className="p-8">
@@ -633,9 +666,11 @@ export default function Home() {
                     </div>
                     <p className="text-foreground/80 leading-relaxed mb-6 italic">"{text}"</p>
                     <div className="flex items-center gap-4">
-                      <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white text-sm font-bold">
-                        {name.charAt(0)}
-                      </div>
+                      <img
+                        src={avatar}
+                        alt={name}
+                        className="w-12 h-12 rounded-full object-cover ring-2 ring-accent/30"
+                      />
                       <div>
                         <p className="font-bold text-primary text-sm">{name}</p>
                         <p className="text-xs text-muted-foreground">{role}, {company}</p>
@@ -679,10 +714,11 @@ export default function Home() {
           <div className="grid lg:grid-cols-3 gap-10">
             <div className="space-y-6">
               {[
-                { label: "General Inquiries", value: "info@justintimeconsultancy.com", icon: "M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" },
-                { label: "Support", value: "support@justintimeconsultancy.com", icon: "M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" },
+                { label: "Phone", value: PHONE, href: PHONE_HREF, icon: "M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" },
+                { label: "General Inquiries", value: "info@justintimeconsultancy.com", href: "mailto:info@justintimeconsultancy.com", icon: "M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" },
+                { label: "Support", value: "support@justintimeconsultancy.com", href: "mailto:support@justintimeconsultancy.com", icon: "M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" },
                 { label: "Business Hours", value: "Mon – Fri: 8:00 AM – 6:00 PM (GMT)", icon: "M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" },
-              ].map(({ label, value, icon }) => (
+              ].map(({ label, value, href, icon }) => (
                 <div key={label} className="flex gap-4 p-5 rounded-xl bg-card border border-border">
                   <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center shrink-0">
                     <svg className="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -691,7 +727,11 @@ export default function Home() {
                   </div>
                   <div>
                     <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1">{label}</p>
-                    <p className="text-sm text-foreground font-medium">{value}</p>
+                    {href ? (
+                      <a href={href} className="text-sm text-foreground font-medium hover:text-accent transition-colors">{value}</a>
+                    ) : (
+                      <p className="text-sm text-foreground font-medium">{value}</p>
+                    )}
                   </div>
                 </div>
               ))}
@@ -777,6 +817,7 @@ export default function Home() {
             <div>
               <h4 className="font-bold text-sm uppercase tracking-wide mb-4">Contact</h4>
               <ul className="space-y-2 text-sm text-primary-foreground/60">
+                <li><a href={PHONE_HREF} className="hover:text-accent transition-colors">{PHONE}</a></li>
                 <li>info@justintimeconsultancy.com</li>
                 <li>support@justintimeconsultancy.com</li>
                 <li>Mon – Fri: 8AM – 6PM GMT</li>

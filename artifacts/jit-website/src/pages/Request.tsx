@@ -125,7 +125,7 @@ export default function Request() {
     <div className="min-h-screen bg-secondary">
       <div className="relative overflow-hidden">
         <img
-          src="/images/sourcing-machinery.png"
+          src="/images/hero-professional.jpg"
           alt=""
           aria-hidden
           className="absolute inset-0 w-full h-full object-cover"
