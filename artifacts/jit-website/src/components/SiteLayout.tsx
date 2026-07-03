@@ -1,5 +1,6 @@
 import { useState, useEffect, type ReactNode } from "react";
 import { Link, useLocation } from "wouter";
+import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -31,40 +32,48 @@ export default function SiteLayout({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <nav
-        className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-          scrolled ? "bg-white/98 backdrop-blur-md shadow-sm border-b border-border" : "bg-white/95 backdrop-blur-md shadow-sm"
+        className={`fixed top-0 w-full z-50 transition-all duration-500 ${
+          scrolled ? "bg-white/98 backdrop-blur-md shadow-md border-b border-border" : "bg-white/95 backdrop-blur-md shadow-sm"
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-[5.5rem] md:h-28 flex items-center justify-between gap-2 md:gap-4">
-          <Link href="/" className="flex items-center shrink min-w-0">
-            <img
+          <Link href="/" className="flex items-center shrink min-w-0 group">
+            <motion.img
               src="/logo.png"
               alt="Just-In-Time Consultancy LLC"
-              className="h-[3.25rem] sm:h-16 md:h-[5.25rem] w-auto object-contain"
+              className="h-[3.25rem] sm:h-16 md:h-[5.25rem] w-auto object-contain transition-transform duration-300 group-hover:scale-[1.03]"
+              whileTap={{ scale: 0.97 }}
             />
           </Link>
 
           <div className="hidden xl:flex items-center gap-5">
             {NAV_LINKS.map(({ label, href }) => (
-              <Link
-                key={href}
-                href={href}
-                className={`text-sm font-medium transition-colors duration-200 whitespace-nowrap ${
-                  isActive(href) ? "text-primary" : "text-foreground/60 hover:text-primary"
-                }`}
-              >
-                {label}
+              <Link key={href} href={href} className="relative group py-1">
+                <span
+                  className={`text-sm font-medium transition-colors duration-200 whitespace-nowrap ${
+                    isActive(href) ? "text-primary" : "text-foreground/60 group-hover:text-primary"
+                  }`}
+                >
+                  {label}
+                </span>
+                <span
+                  className={`absolute -bottom-0.5 left-0 h-0.5 bg-accent rounded-full transition-all duration-300 ${
+                    isActive(href) ? "w-full" : "w-0 group-hover:w-full"
+                  }`}
+                />
               </Link>
             ))}
           </div>
 
           <div className="flex items-center gap-2 shrink-0">
-            <Button
-              onClick={() => setLocation("/request")}
-              className="hidden sm:inline-flex bg-accent hover:bg-accent/90 text-accent-foreground font-semibold shadow-lg shadow-accent/25 text-sm px-4 md:px-5 h-10 md:h-11"
-            >
-              Request a Procurement Quote
-            </Button>
+            <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+              <Button
+                onClick={() => setLocation("/request")}
+                className="hidden sm:inline-flex bg-accent hover:bg-accent/90 text-accent-foreground font-semibold shadow-lg shadow-accent/25 text-sm px-4 md:px-5 h-10 md:h-11 animate-shimmer hover-glow"
+              >
+                Request a Procurement Quote
+              </Button>
+            </motion.div>
 
             <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
               <SheetTrigger asChild>
@@ -103,7 +112,19 @@ export default function SiteLayout({ children }: { children: ReactNode }) {
         </div>
       </nav>
 
-      <main className="flex-1 pt-[5.5rem] md:pt-28">{children}</main>
+      <main className="flex-1 pt-[5.5rem] md:pt-28">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={location}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+          >
+            {children}
+          </motion.div>
+        </AnimatePresence>
+      </main>
 
       <footer className="bg-primary text-primary-foreground py-16">
         <div className="max-w-7xl mx-auto px-6">

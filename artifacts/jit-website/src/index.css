@@ -126,3 +126,104 @@
     }
   }
 }
+
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes float-slow {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(12px, -18px) scale(1.03); }
+    66% { transform: translate(-8px, 10px) scale(0.98); }
+  }
+
+  @keyframes float-delayed {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(-16px, 14px); }
+  }
+
+  @keyframes float-reverse {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(10px, -12px); }
+  }
+
+  @keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  @keyframes ken-burns {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.06); }
+  }
+
+  @keyframes shimmer-slide {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(200%); }
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% { opacity: 0.4; transform: scale(1); }
+    50% { opacity: 0.7; transform: scale(1.05); }
+  }
+
+  @keyframes gradient-shift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
+  .animate-float-slow {
+    animation: float-slow 14s ease-in-out infinite;
+  }
+
+  .animate-float-delayed {
+    animation: float-delayed 11s ease-in-out infinite 2s;
+  }
+
+  .animate-float-reverse {
+    animation: float-reverse 9s ease-in-out infinite 1s;
+  }
+
+  .animate-marquee {
+    animation: marquee 35s linear infinite;
+  }
+
+  .animate-ken-burns {
+    animation: ken-burns 20s ease-in-out infinite alternate;
+  }
+
+  .animate-shimmer {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .animate-shimmer::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(105deg, transparent 40%, rgba(255, 255, 255, 0.25) 50%, transparent 60%);
+    transform: translateX(-100%);
+    animation: shimmer-slide 3.5s ease-in-out infinite;
+  }
+
+  .animate-pulse-glow {
+    animation: pulse-glow 3s ease-in-out infinite;
+  }
+
+  .hover-glow {
+    transition: box-shadow 0.35s ease, transform 0.35s ease;
+  }
+
+  .hover-glow:hover {
+    box-shadow: 0 12px 40px -8px hsl(46 66% 52% / 0.35);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-float-slow,
+  .animate-float-delayed,
+  .animate-float-reverse,
+  .animate-marquee,
+  .animate-ken-burns,
+  .animate-shimmer::after,
+  .animate-pulse-glow {
+    animation: none !important;
+  }
+}
