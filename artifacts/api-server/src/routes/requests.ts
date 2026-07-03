@@ -23,10 +23,12 @@ const submitRequestSchema = z.object({
   productCategory: z.string().min(1),
   description: z.string().min(10),
   quantity: z.string().min(1),
-  expectedBudget: z.string().min(1),
+  expectedBudget: z.string().optional().nullable(),
   preferredDeliveryCountry: z.string().min(1),
   requiredDeliveryDate: z.string().optional().nullable(),
   additionalNotes: z.string().optional().nullable(),
+  attachmentFileName: z.string().optional().nullable(),
+  attachmentData: z.string().optional().nullable(),
 });
 
 router.post("/requests", async (req, res) => {
@@ -39,6 +41,7 @@ router.post("/requests", async (req, res) => {
   const [newRequest] = await db.insert(serviceRequestsTable).values({
     requestId,
     ...parsed.data,
+    expectedBudget: parsed.data.expectedBudget ?? "Not specified",
     status: "pending",
   }).returning();
 
@@ -62,6 +65,8 @@ export function formatRequest(r: typeof serviceRequestsTable.$inferSelect) {
     preferredDeliveryCountry: r.preferredDeliveryCountry,
     requiredDeliveryDate: r.requiredDeliveryDate ?? null,
     additionalNotes: r.additionalNotes ?? null,
+    attachmentFileName: r.attachmentFileName ?? null,
+    attachmentData: r.attachmentData ?? null,
     status: r.status,
     adminNotes: r.adminNotes ?? null,
     createdAt: r.createdAt.toISOString(),

@@ -16,10 +16,15 @@ export interface ServiceRequestInput {
   productCategory: string;
   description: string;
   quantity: string;
-  expectedBudget: string;
+  /** @nullable */
+  expectedBudget?: string | null;
   preferredDeliveryCountry: string;
   /** @nullable */
   requiredDeliveryDate?: string | null;
   /** @nullable */
   additionalNotes?: string | null;
+  /** @nullable */
+  attachmentFileName?: string | null;
+  /** @nullable */
+  attachmentData?: string | null;
 }

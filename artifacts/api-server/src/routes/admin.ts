@@ -1,12 +1,13 @@
 import { Router } from "express";
 import { db } from "@workspace/db";
-import { serviceRequestsTable, adminUsersTable, contactMessagesTable } from "@workspace/db";
+import { serviceRequestsTable, adminUsersTable, contactMessagesTable, supplierRegistrationsTable } from "@workspace/db";
 import { eq, and, or, ilike, desc, sql, count } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { requireAdmin } from "../middlewares/auth";
 import { formatRequest } from "./requests";
 import { formatContactMessage } from "./contact";
+import { formatSupplier } from "./suppliers";
 
 const router = Router();
 
@@ -279,6 +280,67 @@ router.delete("/admin/messages/:id", requireAdmin, async (req, res) => {
   return res.json({ message: "Message deleted" });
 });
 
+router.get("/admin/suppliers", requireAdmin, async (req, res) => {
+  const search = Array.isArray(req.query.search) ? String(req.query.search[0]) : String(req.query.search || "");
+  const page = Array.isArray(req.query.page) ? String(req.query.page[0]) : String(req.query.page || "1");
+  const limit = Array.isArray(req.query.limit) ? String(req.query.limit[0]) : String(req.query.limit || "20");
+
+  const pageNum = Math.max(1, parseInt(page));
+  const limitNum = Math.min(100, Math.max(1, parseInt(limit)));
+  const offset = (pageNum - 1) * limitNum;
+
+  const conditions = [];
+  if (search) {
+    conditions.push(
+      or(
+        ilike(supplierRegistrationsTable.companyName, `%${search}%`),
+        ilike(supplierRegistrationsTable.email, `%${search}%`),
+        ilike(supplierRegistrationsTable.contactPerson, `%${search}%`),
+        ilike(supplierRegistrationsTable.productCategories, `%${search}%`),
+      )
+    );
+  }
+
+  const where = conditions.length > 0 ? and(...conditions) : undefined;
+
+  const [totalResult] = await db
+    .select({ count: count() })
+    .from(supplierRegistrationsTable)
+    .where(where);
+
+  const total = Number(totalResult.count);
+
+  const suppliers = await db
+    .select()
+    .from(supplierRegistrationsTable)
+    .where(where)
+    .orderBy(desc(supplierRegistrationsTable.createdAt))
+    .limit(limitNum)
+    .offset(offset);
+
+  return res.json({
+    suppliers: suppliers.map(formatSupplier),
+    total,
+    page: pageNum,
+    limit: limitNum,
+    totalPages: Math.ceil(total / limitNum),
+  });
+});
+
+router.delete("/admin/suppliers/:id", requireAdmin, async (req, res) => {
+  const id = parseInt(String(req.params.id));
+  if (isNaN(id)) return res.status(400).json({ error: "Invalid ID" });
+
+  const [deleted] = await db
+    .delete(supplierRegistrationsTable)
+    .where(eq(supplierRegistrationsTable.id, id))
+    .returning();
+
+  if (!deleted) return res.status(404).json({ error: "Supplier not found" });
+
+  return res.json({ message: "Supplier deleted" });
+});
+
 router.get("/admin/analytics", requireAdmin, async (req, res) => {
   const [totals] = await db
     .select({
@@ -299,6 +361,10 @@ router.get("/admin/analytics", requireAdmin, async (req, res) => {
   const [contactTotalResult] = await db
     .select({ count: count() })
     .from(contactMessagesTable);
+
+  const [supplierTotalResult] = await db
+    .select({ count: count() })
+    .from(supplierRegistrationsTable);
 
   const recentContactMessages = await db
     .select()
@@ -332,6 +398,7 @@ router.get("/admin/analytics", requireAdmin, async (req, res) => {
     completedRequests: Number(totals.completed),
     cancelledRequests: Number(totals.cancelled),
     totalContactMessages: Number(contactTotalResult.count),
+    totalSupplierRegistrations: Number(supplierTotalResult.count),
     recentRequests: recentRequests.map(formatRequest),
     recentContactMessages: recentContactMessages.map(formatContactMessage),
     requestsByCategory: categoryRows.map((r) => ({

@@ -17,7 +17,8 @@ import {
   getExportAdminRequestsQueryKey,
   type ContactMessage,
 } from "@workspace/api-client-react";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQueryClient, useQuery } from "@tanstack/react-query";
+import { listAdminSuppliers, deleteAdminSupplier, type SupplierRegistration } from "@/lib/api";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -57,7 +58,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-type Tab = "overview" | "requests" | "messages";
+type Tab = "overview" | "requests" | "messages" | "suppliers";
 type RequestStatus = "pending" | "in_progress" | "completed" | "cancelled";
 
 const STATUS_COLORS: Record<RequestStatus, string> = {
@@ -89,6 +90,9 @@ export default function AdminDashboard() {
   const [page, setPage] = useState(1);
   const [messageSearchQuery, setMessageSearchQuery] = useState("");
   const [messagePage, setMessagePage] = useState(1);
+  const [supplierSearchQuery, setSupplierSearchQuery] = useState("");
+  const [supplierPage, setSupplierPage] = useState(1);
+  const [selectedSupplier, setSelectedSupplier] = useState<SupplierRegistration | null>(null);
 
   const logoutMutation = useAdminLogout();
   const updateMutation = useUpdateAdminRequest();
@@ -125,6 +129,12 @@ export default function AdminDashboard() {
     messageParams,
     { query: { queryKey: getListAdminMessagesQueryKey(messageParams), enabled: !!admin && activeTab === "messages" } }
   );
+
+  const { data: suppliersData, isLoading: isLoadingSuppliers, refetch: refetchSuppliers } = useQuery({
+    queryKey: ["admin-suppliers", supplierPage, supplierSearchQuery],
+    queryFn: () => listAdminSuppliers(supplierPage, supplierSearchQuery),
+    enabled: !!admin && activeTab === "suppliers",
+  });
 
   const { data: exportData } = useExportAdminRequests(
     {},
@@ -205,6 +215,19 @@ export default function AdminDashboard() {
     );
   };
 
+  const handleDeleteSupplier = async (id: number) => {
+    if (!confirm("Are you sure you want to delete this supplier application?")) return;
+    try {
+      await deleteAdminSupplier(id);
+      toast({ title: "Deleted", description: "Supplier application removed." });
+      refetchSuppliers();
+      queryClient.invalidateQueries({ queryKey: getGetAnalyticsQueryKey() });
+      setSelectedSupplier(null);
+    } catch {
+      toast({ title: "Error", description: "Failed to delete supplier.", variant: "destructive" });
+    }
+  };
+
   const handleExport = () => {
     queryClient.fetchQuery({ queryKey: getExportAdminRequestsQueryKey({}), queryFn: async () => null }).catch(() => {});
     if (!requestsData?.requests) return;
@@ -226,16 +249,17 @@ export default function AdminDashboard() {
   const statCards = [
     { label: "Total Requests", value: analytics?.totalRequests || 0, color: "text-primary" },
     { label: "Contact Messages", value: analytics?.totalContactMessages || 0, color: "text-violet-600" },
+    { label: "Supplier Applications", value: analytics?.totalSupplierRegistrations || 0, color: "text-teal-600" },
     { label: "Pending", value: analytics?.pendingRequests || 0, color: "text-amber-600" },
     { label: "In Progress", value: analytics?.inProgressRequests || 0, color: "text-blue-600" },
     { label: "Completed", value: analytics?.completedRequests || 0, color: "text-emerald-600" },
-    { label: "Cancelled", value: analytics?.cancelledRequests || 0, color: "text-red-500" },
   ];
 
   const tabLabels: Record<Tab, { title: string; subtitle: string }> = {
     overview: { title: "Dashboard Overview", subtitle: "Analytics and recent activity" },
-    requests: { title: "Procurement Requests", subtitle: "Manage all client procurement requests" },
-    messages: { title: "Contact Messages", subtitle: "Messages from the homepage contact form" },
+    requests: { title: "Procurement Requests", subtitle: "Manage all client procurement quote requests" },
+    messages: { title: "Contact Messages", subtitle: "Messages from the contact form" },
+    suppliers: { title: "Supplier Registrations", subtitle: "Vendor applications from Become a Supplier Partner" },
   };
 
   return (
@@ -251,6 +275,7 @@ export default function AdminDashboard() {
             { id: "overview" as Tab, label: "Overview", icon: "grid" },
             { id: "requests" as Tab, label: "All Requests", icon: "clipboard" },
             { id: "messages" as Tab, label: "Contact Messages", icon: "mail" },
+            { id: "suppliers" as Tab, label: "Suppliers", icon: "users" },
           ]).map(({ id, label, icon }) => (
             <button
               key={id}
@@ -263,6 +288,8 @@ export default function AdminDashboard() {
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg>
               ) : icon === "clipboard" ? (
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>
+              ) : icon === "users" ? (
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
               ) : (
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
               )}
@@ -615,8 +642,114 @@ export default function AdminDashboard() {
               )}
             </>
           )}
+
+          {activeTab === "suppliers" && (
+            <>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <div className="flex-1">
+                  <Input
+                    placeholder="Search by company, contact, email, or categories..."
+                    value={supplierSearchQuery}
+                    onChange={(e) => { setSupplierSearchQuery(e.target.value); setSupplierPage(1); }}
+                    className="bg-white"
+                  />
+                </div>
+              </div>
+
+              <Card className="bg-white border-border">
+                <CardContent className="p-0">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Company</TableHead>
+                        <TableHead>Contact</TableHead>
+                        <TableHead>Country</TableHead>
+                        <TableHead>Categories</TableHead>
+                        <TableHead>Date</TableHead>
+                        <TableHead className="text-right">Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {isLoadingSuppliers ? (
+                        <TableRow>
+                          <TableCell colSpan={6} className="text-center py-12 text-muted-foreground">Loading...</TableCell>
+                        </TableRow>
+                      ) : suppliersData?.suppliers.length === 0 ? (
+                        <TableRow>
+                          <TableCell colSpan={6} className="text-center py-12 text-muted-foreground">No supplier applications found</TableCell>
+                        </TableRow>
+                      ) : suppliersData?.suppliers.map((s) => (
+                        <TableRow key={s.id} className="hover:bg-secondary/80">
+                          <TableCell className="font-medium">{s.companyName}</TableCell>
+                          <TableCell className="text-muted-foreground">{s.contactPerson}</TableCell>
+                          <TableCell className="text-muted-foreground">{s.country}</TableCell>
+                          <TableCell className="text-muted-foreground max-w-[160px] truncate">{s.productCategories}</TableCell>
+                          <TableCell className="text-muted-foreground text-xs">{new Date(s.createdAt).toLocaleDateString()}</TableCell>
+                          <TableCell className="text-right">
+                            <div className="flex items-center justify-end gap-2">
+                              <Button size="sm" variant="ghost" className="h-7 text-xs" onClick={() => setSelectedSupplier(s)}>View</Button>
+                              <Button size="sm" variant="ghost" className="h-7 text-xs text-red-500 hover:text-red-700 hover:bg-red-50"
+                                onClick={() => handleDeleteSupplier(s.id)}>Delete</Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </CardContent>
+              </Card>
+
+              {suppliersData && suppliersData.totalPages > 1 && (
+                <div className="flex justify-between items-center text-sm text-muted-foreground">
+                  <span>Showing {suppliersData.suppliers.length} of {suppliersData.total} applications</span>
+                  <div className="flex gap-2">
+                    <Button variant="outline" size="sm" disabled={supplierPage <= 1} onClick={() => setSupplierPage(p => p - 1)}>Previous</Button>
+                    <span className="px-3 py-1 rounded border text-xs">{supplierPage} / {suppliersData.totalPages}</span>
+                    <Button variant="outline" size="sm" disabled={supplierPage >= suppliersData.totalPages} onClick={() => setSupplierPage(p => p + 1)}>Next</Button>
+                  </div>
+                </div>
+              )}
+            </>
+          )}
         </div>
       </main>
+
+      {/* Supplier Dialog */}
+      {selectedSupplier && (
+        <Dialog open={!!selectedSupplier} onOpenChange={() => setSelectedSupplier(null)}>
+          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="text-primary">{selectedSupplier.companyName}</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4 text-sm">
+              <p><span className="text-muted-foreground">Contact:</span> {selectedSupplier.contactPerson}</p>
+              <p><span className="text-muted-foreground">Email:</span> {selectedSupplier.email}</p>
+              <p><span className="text-muted-foreground">Phone:</span> {selectedSupplier.phone}</p>
+              <p><span className="text-muted-foreground">Country:</span> {selectedSupplier.country}</p>
+              <div className="p-4 bg-secondary rounded-lg">
+                <p className="text-xs text-muted-foreground uppercase mb-1">Product Categories</p>
+                <p>{selectedSupplier.productCategories}</p>
+              </div>
+              {selectedSupplier.pricingInfo && (
+                <div className="p-4 bg-secondary rounded-lg">
+                  <p className="text-xs text-muted-foreground uppercase mb-1">Pricing</p>
+                  <p>{selectedSupplier.pricingInfo}</p>
+                </div>
+              )}
+              {selectedSupplier.certifications && (
+                <div className="p-4 bg-secondary rounded-lg">
+                  <p className="text-xs text-muted-foreground uppercase mb-1">Certifications</p>
+                  <p>{selectedSupplier.certifications}</p>
+                </div>
+              )}
+              <div className="p-4 bg-secondary rounded-lg">
+                <p className="text-xs text-muted-foreground uppercase mb-1">Description</p>
+                <p>{selectedSupplier.companyDescription}</p>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
 
       {/* Message Dialog */}
       {selectedMessage && (

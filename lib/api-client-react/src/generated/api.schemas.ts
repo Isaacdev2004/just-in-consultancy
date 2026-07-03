@@ -45,6 +45,10 @@ export interface ServiceRequest {
   requiredDeliveryDate?: string | null;
   /** @nullable */
   additionalNotes?: string | null;
+  /** @nullable */
+  attachmentFileName?: string | null;
+  /** @nullable */
+  attachmentData?: string | null;
   status: ServiceRequestStatus;
   /** @nullable */
   adminNotes?: string | null;
@@ -62,12 +66,17 @@ export interface ServiceRequestInput {
   productCategory: string;
   description: string;
   quantity: string;
-  expectedBudget: string;
+  /** @nullable */
+  expectedBudget?: string | null;
   preferredDeliveryCountry: string;
   /** @nullable */
   requiredDeliveryDate?: string | null;
   /** @nullable */
   additionalNotes?: string | null;
+  /** @nullable */
+  attachmentFileName?: string | null;
+  /** @nullable */
+  attachmentData?: string | null;
 }
 
 export type ServiceRequestUpdateStatus = typeof ServiceRequestUpdateStatus[keyof typeof ServiceRequestUpdateStatus];
@@ -137,6 +146,7 @@ export interface AnalyticsData {
   completedRequests: number;
   cancelledRequests: number;
   totalContactMessages: number;
+  totalSupplierRegistrations: number;
   recentRequests: ServiceRequest[];
   recentContactMessages: ContactMessage[];
   requestsByCategory: CategoryCount[];

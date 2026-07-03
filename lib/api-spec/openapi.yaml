@@ -439,6 +439,10 @@ components:
           type: ["string", "null"]
         additionalNotes:
           type: ["string", "null"]
+        attachmentFileName:
+          type: ["string", "null"]
+        attachmentData:
+          type: ["string", "null"]
         status:
           type: string
           enum: [pending, in_progress, completed, cancelled]
@@ -488,12 +492,16 @@ components:
         quantity:
           type: string
         expectedBudget:
-          type: string
+          type: ["string", "null"]
         preferredDeliveryCountry:
           type: string
         requiredDeliveryDate:
           type: ["string", "null"]
         additionalNotes:
+          type: ["string", "null"]
+        attachmentFileName:
+          type: ["string", "null"]
+        attachmentData:
           type: ["string", "null"]
       required:
         - companyName
@@ -505,7 +513,6 @@ components:
         - productCategory
         - description
         - quantity
-        - expectedBudget
         - preferredDeliveryCountry
 
     ServiceRequestUpdate:
@@ -587,6 +594,8 @@ components:
           type: integer
         totalContactMessages:
           type: integer
+        totalSupplierRegistrations:
+          type: integer
         recentRequests:
           type: array
           items:
@@ -610,6 +619,7 @@ components:
         - completedRequests
         - cancelledRequests
         - totalContactMessages
+        - totalSupplierRegistrations
         - recentRequests
         - recentContactMessages
         - requestsByCategory

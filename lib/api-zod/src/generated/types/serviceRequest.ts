@@ -25,6 +25,10 @@ export interface ServiceRequest {
   requiredDeliveryDate?: string | null;
   /** @nullable */
   additionalNotes?: string | null;
+  /** @nullable */
+  attachmentFileName?: string | null;
+  /** @nullable */
+  attachmentData?: string | null;
   status: ServiceRequestStatus;
   /** @nullable */
   adminNotes?: string | null;

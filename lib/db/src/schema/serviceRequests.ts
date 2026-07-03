@@ -25,6 +25,8 @@ export const serviceRequestsTable = pgTable("service_requests", {
   preferredDeliveryCountry: text("preferred_delivery_country").notNull(),
   requiredDeliveryDate: text("required_delivery_date"),
   additionalNotes: text("additional_notes"),
+  attachmentFileName: text("attachment_file_name"),
+  attachmentData: text("attachment_data"),
   status: requestStatusEnum("status").notNull().default("pending"),
   adminNotes: text("admin_notes"),
   createdAt: timestamp("created_at").notNull().defaultNow(),

@@ -17,6 +17,7 @@ export interface AnalyticsData {
   completedRequests: number;
   cancelledRequests: number;
   totalContactMessages: number;
+  totalSupplierRegistrations: number;
   recentRequests: ServiceRequest[];
   recentContactMessages: ContactMessage[];
   requestsByCategory: CategoryCount[];
