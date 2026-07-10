@@ -165,7 +165,7 @@ export default function SiteLayout({ children }: { children: ReactNode }) {
                 </li>
                 <li>info@justintimeconsultancy.com</li>
                 <li>support@justintimeconsultancy.com</li>
-                <li>Mon – Fri: 8AM – 6PM GMT</li>
+                <li>Mon – Fri: 8AM – 6PM EST</li>
               </ul>
             </div>
           </div>

@@ -65,7 +65,7 @@ export default function Contact() {
               { label: "Phone", value: PHONE, href: PHONE_HREF },
               { label: "General Inquiries", value: "info@justintimeconsultancy.com", href: "mailto:info@justintimeconsultancy.com" },
               { label: "Support", value: "support@justintimeconsultancy.com", href: "mailto:support@justintimeconsultancy.com" },
-              { label: "Business Hours", value: "Mon – Fri: 8:00 AM – 6:00 PM (GMT)" },
+              { label: "Business Hours", value: "Mon – Fri: 8:00 AM – 6:00 PM (EST)" },
             ].map(({ label, value, href }) => (
               <div key={label} className="p-5 rounded-xl bg-card border border-border">
                 <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1">{label}</p>
