@@ -118,11 +118,11 @@
     @apply font-sans antialiased bg-background text-foreground;
   }
   html {
-    scroll-padding-top: 5.75rem;
+    scroll-padding-top: 6rem;
   }
   @media (min-width: 768px) {
     html {
-      scroll-padding-top: 7rem;
+      scroll-padding-top: 8.75rem;
     }
   }
 }

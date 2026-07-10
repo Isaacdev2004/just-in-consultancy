@@ -87,7 +87,7 @@ export default function Home() {
     <SiteLayout>
       {/* Hero */}
       <section
-        className="min-h-[calc(100vh-5.5rem)] md:min-h-[calc(100vh-7rem)] flex flex-col relative overflow-hidden"
+        className="min-h-[calc(100vh-5.75rem)] md:min-h-[calc(100vh-8.5rem)] flex flex-col relative overflow-hidden"
         style={{ background: "linear-gradient(135deg, #1A365D 0%, #152e4f 40%, #0f2340 100%)" }}
       >
         <div className="absolute inset-0">

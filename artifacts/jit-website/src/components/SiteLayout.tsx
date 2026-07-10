@@ -36,12 +36,12 @@ export default function SiteLayout({ children }: { children: ReactNode }) {
           scrolled ? "bg-white/98 backdrop-blur-md shadow-md border-b border-border" : "bg-white/95 backdrop-blur-md shadow-sm"
         }`}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-[5.5rem] md:h-28 flex items-center justify-between gap-2 md:gap-4">
-          <Link href="/" className="flex items-center shrink min-w-0 group">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-[5.75rem] md:h-[8.5rem] flex items-center justify-between gap-2 md:gap-4">
+          <Link href="/" className="flex items-center shrink-0 h-full py-1 sm:py-1.5 md:py-2 group">
             <motion.img
               src="/logo.png"
               alt="Just-In-Time Consultancy LLC"
-              className="h-[3.25rem] sm:h-16 md:h-[5.25rem] w-auto object-contain transition-transform duration-300 group-hover:scale-[1.03]"
+              className="h-full w-auto max-w-[min(320px,48vw)] sm:max-w-[min(380px,40vw)] md:max-w-none object-contain object-left transition-transform duration-300 group-hover:scale-[1.02]"
               whileTap={{ scale: 0.97 }}
             />
           </Link>
@@ -112,7 +112,7 @@ export default function SiteLayout({ children }: { children: ReactNode }) {
         </div>
       </nav>
 
-      <main className="flex-1 pt-[5.5rem] md:pt-28">
+      <main className="flex-1 pt-[5.75rem] md:pt-[8.5rem]">
         <AnimatePresence mode="wait">
           <motion.div
             key={location}
