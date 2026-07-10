@@ -2,12 +2,15 @@ import { Link } from "wouter";
 import { motion } from "framer-motion";
 import SiteLayout from "@/components/SiteLayout";
 import PageHeader, { SectionHeading } from "@/components/PageHeader";
+import { Reveal, Stagger, StaggerItem } from "@/components/motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import {
   SUBPOSITIONING,
   POSITIONING,
   journeyTimeline,
+  founderProfile,
   PHONE,
   PHONE_HREF,
 } from "@/lib/siteContent";
@@ -38,11 +41,13 @@ export default function About() {
               scale.
             </p>
           </div>
-          <div className="grid grid-cols-2 gap-4">
-            <img src="/images/sourcing-logistics.jpg" alt="Logistics operations" className="rounded-2xl object-cover h-48 w-full shadow-lg col-span-2" />
-            <img src="/images/sourcing-vacuum.png" alt="Commercial equipment" className="rounded-2xl object-cover h-36 w-full shadow-lg" />
-            <img src="/images/sourcing-vehicle.png" alt="Fleet procurement" className="rounded-2xl object-cover h-36 w-full shadow-lg" />
-          </div>
+          <Reveal direction="right">
+            <img
+              src={founderProfile.photoFull}
+              alt={`${founderProfile.name}, ${founderProfile.title}`}
+              className="rounded-2xl object-cover w-full max-h-[520px] shadow-xl ring-4 ring-accent/15"
+            />
+          </Reveal>
         </div>
       </section>
 
@@ -98,34 +103,63 @@ export default function About() {
       </section>
 
       <section id="leadership" className="py-20 bg-secondary">
-        <div className="max-w-7xl mx-auto px-6">
+        <div className="max-w-5xl mx-auto px-6">
           <SectionHeading
             eyebrow="Leadership"
-            title="Meet Our Founder"
-            subtitle="In procurement, people buy people. Albert Ofori Appiah leads Just-In-Time Consultancy with deep global trade experience."
+            title="Founder & CEO"
+            subtitle="In procurement, people buy people. Albert Ofori Appiah brings engineering rigor, project discipline, and 10+ years in regulated industries to every client engagement."
           />
-          <div className="max-w-4xl mx-auto grid md:grid-cols-[240px_1fr] gap-10 items-start">
-            <img
-              src="/images/team/founder-albert.jpg"
-              alt="Albert Ofori Appiah, Founder & CEO"
-              className="w-full rounded-2xl object-cover aspect-[3/4] shadow-xl ring-4 ring-accent/20"
-            />
-            <div>
-              <h3 className="text-2xl md:text-3xl font-extrabold text-primary mb-1">Albert Ofori Appiah</h3>
-              <p className="text-accent font-semibold mb-4">Founder & CEO</p>
-              <p className="text-muted-foreground leading-relaxed mb-4">
-                Albert founded Just-In-Time Consultancy to give businesses of every size access to world-class
-                procurement intelligence. With deep experience in global trade and supplier development, he leads a
-                team dedicated to delivering smarter sourcing, faster turnaround, and measurable cost savings for
-                clients across 45+ countries.
-              </p>
-              <p className="text-muted-foreground leading-relaxed mb-6">
+
+          <div className="grid lg:grid-cols-[280px_1fr] gap-10 items-start">
+            <Reveal direction="left">
+              <img
+                src={founderProfile.photo}
+                alt={`${founderProfile.name}, ${founderProfile.title}`}
+                className="w-full rounded-2xl object-cover aspect-[3/4] shadow-xl ring-4 ring-accent/20 sticky top-32"
+              />
+            </Reveal>
+
+            <div className="space-y-5">
+              <div>
+                <h3 className="text-2xl md:text-3xl font-extrabold text-primary mb-1">{founderProfile.name}</h3>
+                <p className="text-accent font-semibold">{founderProfile.title}</p>
+              </div>
+
+              <p className="text-foreground/90 leading-relaxed font-medium">{founderProfile.intro}</p>
+
+              <Stagger className="flex flex-wrap gap-2">
+                {founderProfile.credentials.map((credential) => (
+                  <StaggerItem key={credential}>
+                    <Badge variant="secondary" className="text-xs font-semibold px-3 py-1 bg-primary/5 text-primary border border-primary/10">
+                      {credential}
+                    </Badge>
+                  </StaggerItem>
+                ))}
+              </Stagger>
+
+              {founderProfile.paragraphs.map((paragraph) => (
+                <p key={paragraph.slice(0, 40)} className="text-muted-foreground leading-relaxed">
+                  {paragraph}
+                </p>
+              ))}
+
+              <Card className="border-accent/30 bg-accent/5">
+                <CardContent className="p-6">
+                  <p className="text-sm font-semibold text-accent uppercase tracking-wide mb-2">Albert&apos;s Mission at JIT</p>
+                  <p className="text-primary font-medium leading-relaxed italic">
+                    &ldquo;{founderProfile.mission}&rdquo;
+                  </p>
+                </CardContent>
+              </Card>
+
+              <p className="text-muted-foreground leading-relaxed">
                 Contact our U.S. headquarters at{" "}
                 <a href={PHONE_HREF} className="text-accent font-semibold hover:underline">
                   {PHONE}
                 </a>
                 .
               </p>
+
               <Link href="/request">
                 <Button className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold">
                   Request a Procurement Quote

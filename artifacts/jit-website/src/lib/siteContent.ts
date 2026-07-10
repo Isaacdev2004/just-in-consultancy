@@ -121,6 +121,32 @@ export const processSteps = [
   { step: "04", title: "Purchase & Deliver", desc: "We coordinate purchase, logistics, and delivery to your location." },
 ];
 
+export const founderProfile = {
+  name: "Albert Ofori Appiah",
+  title: "Founder & CEO",
+  photo: "/images/team/founder-albert.jpg",
+  photoFull: "/images/team/founder-albert-full.jpg",
+  credentials: [
+    "Mechanical Engineer",
+    "PMI-certified Project Manager",
+    "IT Business Systems Analyst",
+    "Building Automation Engineer",
+    "BMS & HVAC Professional",
+    "FMEA Expertise",
+  ],
+  intro:
+    "Albert Ofori Appiah is the Founder and CEO of Just-In-Time Consultancy LLC, a procurement and business solutions company built to help organizations source smarter, move faster, and operate with greater reliability.",
+  paragraphs: [
+    "Albert brings a strong multidisciplinary background as a Mechanical Engineer, PMI-certified Project Manager, IT Business Systems Analyst, Building Automation Engineer, and experienced BMS and HVAC professional. He also has expertise in FMEA (Failure Mode and Effects Analysis), supporting risk identification, process improvement, equipment reliability, and preventive planning in technical and operational environments.",
+    "With over 10 years of experience in the pharmaceutical and manufacturing industries, Albert has worked in highly regulated environments where precision, compliance, quality, cost control, safety, risk management, and timely execution are critical.",
+    "His experience in Building Management Systems, HVAC systems, automation, FMEA, engineering operations, project coordination, and business systems analysis gives him a practical understanding of how organizations depend on reliable suppliers, accurate documentation, efficient purchasing processes, quality-focused vendor selection, and well-managed delivery timelines.",
+    "Through Just-In-Time Consultancy, Albert applies this technical and operational expertise to support businesses, institutions, and organizations with dependable procurement, supplier coordination, sourcing support, vendor evaluation, equipment purchasing, and project-driven supply solutions.",
+    "His leadership approach combines engineering knowledge, procurement discipline, project management structure, risk-based thinking, and industry insight to help clients obtain the right products, services, equipment, and technical solutions at the right time, without unnecessary delays or costly procurement mistakes.",
+  ],
+  mission:
+    "To make procurement more reliable, transparent, efficient, and technically informed for every client served.",
+};
+
 export const journeyTimeline = [
   { year: "2016", title: "Founded in Massachusetts", desc: "Albert Ofori Appiah launches Just-In-Time Consultancy in the U.S., helping SMBs source industrial equipment, facility supplies, and MRO products domestically and abroad." },
   { year: "2018", title: "West Africa & Asia Networks", desc: "Established verified supplier partnerships in Ghana, Nigeria, India, and Southeast Asia — focused on manufacturing inputs and commercial equipment." },
