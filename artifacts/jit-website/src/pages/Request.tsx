@@ -101,15 +101,21 @@ export default function Request() {
       {
         data: {
           ...values,
-          expectedBudget: values.expectedBudget || "Not specified",
+          expectedBudget: values.expectedBudget?.trim() || "Not specified",
+          requiredDeliveryDate: values.requiredDeliveryDate?.trim() || null,
+          additionalNotes: values.additionalNotes?.trim() || null,
           attachmentFileName: attachmentFileName ?? null,
           attachmentData: attachmentData ?? null,
         },
       },
       {
         onSuccess: (data) => setRequestId(data.requestId),
-        onError: () => {
-          toast({ title: "Error", description: "Failed to submit request. Please try again.", variant: "destructive" });
+        onError: (error) => {
+          const message =
+            error instanceof Error && error.message
+              ? error.message
+              : "Failed to submit request. Please try again or call us directly.";
+          toast({ title: "Error", description: message, variant: "destructive" });
         },
       }
     );

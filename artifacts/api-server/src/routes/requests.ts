@@ -1,8 +1,8 @@
 import { Router } from "express";
 import { db } from "@workspace/db";
 import { serviceRequestsTable } from "@workspace/db";
-import { eq } from "drizzle-orm";
 import { z } from "zod";
+import { logger } from "../lib/logger";
 
 const router = Router();
 
@@ -12,6 +12,9 @@ function generateRequestId(): string {
   const random = Math.random().toString(36).substring(2, 6).toUpperCase();
   return `${prefix}-${timestamp}-${random}`;
 }
+
+const emptyToNull = (value?: string | null) =>
+  value === undefined || value === null || value.trim() === "" ? null : value;
 
 const submitRequestSchema = z.object({
   companyName: z.string().min(1),
@@ -38,14 +41,56 @@ router.post("/requests", async (req, res) => {
   }
 
   const requestId = generateRequestId();
-  const [newRequest] = await db.insert(serviceRequestsTable).values({
-    requestId,
-    ...parsed.data,
-    expectedBudget: parsed.data.expectedBudget ?? "Not specified",
-    status: "pending",
-  }).returning();
+  const now = new Date();
+  const attachmentFileName = emptyToNull(parsed.data.attachmentFileName);
+  const attachmentData = emptyToNull(parsed.data.attachmentData);
 
-  return res.status(201).json(formatRequest(newRequest));
+  const baseValues = {
+    requestId,
+    companyName: parsed.data.companyName,
+    contactPerson: parsed.data.contactPerson,
+    email: parsed.data.email,
+    phone: parsed.data.phone,
+    country: parsed.data.country,
+    productName: parsed.data.productName,
+    productCategory: parsed.data.productCategory,
+    description: parsed.data.description,
+    quantity: parsed.data.quantity,
+    expectedBudget: parsed.data.expectedBudget?.trim() || "Not specified",
+    preferredDeliveryCountry: parsed.data.preferredDeliveryCountry,
+    requiredDeliveryDate: emptyToNull(parsed.data.requiredDeliveryDate),
+    additionalNotes: emptyToNull(parsed.data.additionalNotes),
+    status: "pending" as const,
+    updatedAt: now,
+  };
+
+  try {
+    const [newRequest] = await db
+      .insert(serviceRequestsTable)
+      .values({
+        ...baseValues,
+        ...(attachmentFileName
+          ? { attachmentFileName, attachmentData: attachmentData ?? null }
+          : {}),
+      })
+      .returning();
+
+    return res.status(201).json(formatRequest(newRequest));
+  } catch (err) {
+    logger.error({ err }, "Failed to create service request");
+
+    try {
+      const [newRequest] = await db
+        .insert(serviceRequestsTable)
+        .values(baseValues)
+        .returning();
+
+      return res.status(201).json(formatRequest(newRequest));
+    } catch (retryErr) {
+      logger.error({ err: retryErr }, "Service request retry insert failed");
+      return res.status(500).json({ error: "Failed to save request. Please try again or contact us directly." });
+    }
+  }
 });
 
 export function formatRequest(r: typeof serviceRequestsTable.$inferSelect) {
