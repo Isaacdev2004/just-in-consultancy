@@ -14,7 +14,6 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-  FormDescription,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -273,14 +272,20 @@ export default function Request() {
                       <FormMessage />
                     </FormItem>
                   )} />
-                  <FormItem>
-                    <FormLabel>Upload Document (Optional)</FormLabel>
-                    <FormControl>
-                      <Input ref={fileInputRef} type="file" accept=".pdf,.doc,.docx,.xls,.xlsx,.png,.jpg,.jpeg" onChange={handleFileChange} />
-                    </FormControl>
-                    <FormDescription>Spec sheets, RFQs, or tender documents — max 5 MB.</FormDescription>
-                    {attachmentFileName && <p className="text-sm text-muted-foreground mt-1">Selected: {attachmentFileName}</p>}
-                  </FormItem>
+                  <div className="space-y-2">
+                    <label htmlFor="attachment" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                      Upload Document (Optional)
+                    </label>
+                    <Input
+                      id="attachment"
+                      ref={fileInputRef}
+                      type="file"
+                      accept=".pdf,.doc,.docx,.xls,.xlsx,.png,.jpg,.jpeg"
+                      onChange={handleFileChange}
+                    />
+                    <p className="text-sm text-muted-foreground">Spec sheets, RFQs, or tender documents — max 5 MB.</p>
+                    {attachmentFileName && <p className="text-sm text-muted-foreground">Selected: {attachmentFileName}</p>}
+                  </div>
                   <div className="flex gap-4">
                     <Button type="button" variant="outline" className="w-full" onClick={() => setStep(2)}>Back</Button>
                     <Button type="button" className="w-full bg-primary hover:bg-primary/90" onClick={() => setStep(4)}>Review</Button>
